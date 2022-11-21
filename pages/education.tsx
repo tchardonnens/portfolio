@@ -12,11 +12,11 @@ export default function Projects() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          <a>Projects</a>
+          <a>Education</a>
         </h1>
 
         <p className={styles.description}>
-          Here are some of the projects I have done and that I'm proud of.
+          The universities I went to and the major I took.
         </p>
 
         <div className={styles.grid}>

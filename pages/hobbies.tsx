@@ -3,7 +3,7 @@ import styles from '../styles/Home.module.css'
 
 export default function Projects() {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Thomas Portfolio</title>
         <meta name="description" content="welcome" />
@@ -12,7 +12,7 @@ export default function Projects() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          <a>Projects</a>
+          <a>Hobbies</a>
         </h1>
 
         <p className={styles.description}>
