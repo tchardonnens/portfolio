@@ -33,6 +33,11 @@ export default function Home() {
               <h2>Projects 🚀 &rarr;</h2>
               <p>Some of my projects</p>
             </a>
+
+            <a href="/links" className={styles.card}>
+              <h2>My links ⚡️ &rarr;</h2>
+              <p>Useful links for socials and other stuff</p>
+            </a>
           </div>
         </main>
       </div>
