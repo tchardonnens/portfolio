@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Navbar from '../components/navbar'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -19,25 +20,24 @@ export default function Home() {
           </h1>
 
           <p className={styles.description}>
-            I'm Thomas Chardonnens and here is my{' '}
-            <code className={styles.code}>personal website</code>
+            I&apos;m Thomas Chardonnens and here is my <code className={styles.code}>personal website</code>
           </p>
 
           <div className={styles.grid}>
-            <a href="/aboutMe" className={styles.card}>
+            <Link href="/aboutMe" className={styles.card}>
               <h2>About me 😁 &rarr;</h2>
               <p>Let me introduce myself!</p>
-            </a>
+            </Link>
 
-            <a href="/projects" className={styles.card}>
+            <Link href="/projects" className={styles.card}>
               <h2>Projects 🚀 &rarr;</h2>
               <p>Some of my projects</p>
-            </a>
+            </Link>
 
-            <a href="/links" className={styles.card}>
+            <Link href="/links" className={styles.card}>
               <h2>My links ⚡️ &rarr;</h2>
               <p>Useful links for socials and other stuff</p>
-            </a>
+            </Link>
           </div>
         </main>
       </div>
