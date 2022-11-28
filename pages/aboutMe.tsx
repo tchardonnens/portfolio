@@ -25,8 +25,8 @@ export default function AboutMe() {
           </p>
 
           <p className="bg-neutral-900 rounded-lg shadow-lg w-108 p-10">
-            I'm a French Computer Science student in Paris 🇫🇷. I'm graduating from engineering school in 2024. 🎓<br /><br />
-            Hacking stuff here and there, interested in Blockchain, Cybersecurity, Software Dev or ML, I'm curious about a lot of things. 👨‍💻<br /><br />
+            I&apos;m a French Computer Science student in Paris 🇫🇷. I&apos;m graduating from engineering school in 2024. 🎓<br /><br />
+            Hacking stuff here and there, interested in Blockchain, Cybersecurity, Software Dev or ML, I&apos;m curious about a lot of things. 👨‍💻<br /><br />
             Currently Tech Lead at <Link href="https://juniorisep.com/accueil-new/" className='text-indigo-600'>Junior ISEP</Link>, the Junior Enterprise of my engineering school, <Link href="https://www.isep.fr/" className='text-indigo-600'>ISEP</Link>.
             Also doing a 5 months internship at <Link href="https://www.ledger.com/" className='text-indigo-600'>Ledger</Link> as a Full stack Engineer Intern.
           </p>
