@@ -20,7 +20,7 @@ export default function Home() {
       <div className={styles.container}>
         <main className={styles.main}>
           <h1 className={styles.masterTitle}>
-            <a>Thomas' Portfolio</a>
+            <a>Thomas Portfolio</a>
           </h1>
 
           <p className={styles.description}>
