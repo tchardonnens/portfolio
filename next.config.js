@@ -21,6 +21,5 @@ module.exports = {
   images: {
     loader: 'imgix',
     path: 'thomas-chardo',
-  },
-  nextConfig
+  }
 }
