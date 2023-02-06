@@ -18,8 +18,8 @@ if (isGithubActions) {
 module.exports = {
   assetPrefix: assetPrefix,
   basePath: basePath,
-  images: {
-    loader: 'imgix',
-    path: 'thomas-chardo',
-  }
+  // images: {
+  //   loader: 'imgix',
+  //   path: 'thomas-chardo',
+  // }
 }
