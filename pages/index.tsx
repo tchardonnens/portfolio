@@ -39,7 +39,7 @@ export default function Home() {
               <br />
               I&apos;m graduating from <Link href="https://www.isep.fr/" className='text-indigo-300'>ISEP</Link> engineering school in 2024. 🎓<br /><br />
               Hacking stuff here and there, interested in Blockchain, Cybersecurity, Software Dev or ML, I&apos;m curious about a lot of things. 👨‍💻<br /><br />
-              Also doing a 5 months internship at <Link href="https://www.ledger.com/" className='text-indigo-300'>Ledger</Link> as a Full stack Engineer Intern.
+              Just ended a 5 months internship at <Link href="https://www.ledger.com/" className='text-indigo-300'>Ledger</Link> as a Full stack Engineer Intern.
             </p>
           </div>
 
