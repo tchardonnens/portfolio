@@ -56,10 +56,11 @@ export default function Home() {
             <div className="grid auto-cols-auto gap-10">
 
 
-              <Card name="Flat Fall Race" description="Multiplayer, client-server networked, 2D race game" link="https://github.com/tchardonnens-ledger/flat-fall-race" stack="Java & JavaFX" image="/ffr.webp" />
-              <Card name="Password Crusher" description="Password cracker, based on a large cached dictionnary of hashed passwords" link="https://github.com/tchardonnens-ledger/pwd-crusher-front" stack="NestJS & Angular" image="/pwd-crusher.webp" />
-              <Card name="Schwarzschild Precession, State of the Art" link="https://github.com/tchardonnens-ledger/schwarzschild-precession" description="Simulate the trajectory of the star S2 in orbit around the black hole at the center of our galaxy" stack="Python & Jupyter Notebook" image="/schwarzschild.webp" />
-              <Card name="Chess game" description="CLI chess game" link="https://github.com/tchardonnens-ledger/cours-java/tree/main/TP7_G7_Chardonnens" stack="Java" image="/cli-chess.webp" />
+              <Card name="Flat Fall Race" description="Multiplayer, client-server networked, 2D race game" link="https://github.com/tchardonnens/flat-fall-race" stack="Java & JavaFX" image="/ffr.webp" />
+              <Card name="ScanURL" description="Web-based OSINT tool that retrieves WHOIS, IP, reverse DNS and redirections analysis of a URL or first level domain." link="https://github.com/tchardonnens/scanurl" stack="FastAPI & Jinja2" image="/scanurl.webp" />
+              <Card name="Password Crusher" description="Password cracker, based on a large cached dictionnary of hashed passwords" link="https://github.com/tchardonnens/pwd-crusher-front" stack="NestJS & Angular" image="/pwd-crusher.webp" />
+              <Card name="Schwarzschild Precession, State of the Art" link="https://github.com/tchardonnens/schwarzschild-precession" description="Simulate the trajectory of the star S2 in orbit around the black hole at the center of our galaxy" stack="Python & Jupyter Notebook" image="/schwarzschild.webp" />
+              <Card name="Chess game" description="CLI chess game" link="https://github.com/tchardonnens/cours-java/tree/main/TP7_G7_Chardonnens" stack="Java" image="/cli-chess.webp" />
 
             </div>
             <br />
