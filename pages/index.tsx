@@ -11,7 +11,7 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:title" content="Thomas Chardonnens" />
-        <meta property="og:description" content="Thomas Chardonnens' personal website" />
+        <meta property="og:description" content="Personal website" />
         {/* <meta property="og:image" content="" /> */}
         <meta property="og:url" content="https://portfolio.thomaschardonnens.com" />
       </Head>
