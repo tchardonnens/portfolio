@@ -12,7 +12,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:title" content="Thomas Chardonnens" />
         <meta property="og:description" content="Personal website" />
-        {/* <meta property="og:image" content="" /> */}
+        <meta property="og:image" content="https://pbs.twimg.com/profile_images/1449466562591723522/3MyO9dFd_400x400.jpg" />
         <meta property="og:url" content="https://portfolio.thomaschardonnens.com" />
       </Head>
 
