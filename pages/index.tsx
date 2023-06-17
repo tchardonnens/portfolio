@@ -34,10 +34,10 @@ export default function Home() {
           <br />
           <ul className="text-md">
             <li>
-              <a href='https://twitter.com/ChardonnensT'>
+              <a href='https://twitter.com/thomas_chardo'>
                 <div className="flex flex-row">
                   <p>Twitter:&nbsp;</p>
-                  <p className="text-gray-600 dark:text-gray-400">@ChardonnensT</p>
+                  <p className="text-gray-600 dark:text-gray-400">@thomas_chardo</p>
                 </div>
               </a>
             </li>
