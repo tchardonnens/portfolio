@@ -3,7 +3,7 @@ import Head from 'next/head'
 export default function Home() {
   return (
 
-    <html className='p-0 m-0'>
+    <div className='p-0 m-0'>
       <Head>
         <title>Thomas Chardonnens</title>
         <meta name="description" content="Thomas Chardonnens' personal website" />
@@ -82,9 +82,16 @@ export default function Home() {
                 </div>
               </a>
             </li>
+            <li>
+              <a href='https://plane-buddy.vercel.app/'>
+                <div className="flex flex-row">
+                  <p>Plane Buddy</p>
+                </div>
+              </a>
+            </li>
           </ul>
         </div>
       </main>
-    </html>
+    </div>
   )
 }
