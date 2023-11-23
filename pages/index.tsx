@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -20,16 +21,6 @@ export default function Home() {
         <div className="p-4">
           <p className="text-3xl">
             Thomas Chardonnens
-          </p>
-          <br />
-          <p className="text-md">
-            CS student&nbsp;
-            <a href="https://www.isep.fr/">@ISEP 🇫🇷&nbsp;</a>
-            and&nbsp;
-            <a href="https://www.berkeley.edu/">@UCBerkeley 🇺🇸</a>
-            <br />
-            ex-Software Engineer Intern&nbsp;
-            <a href="https://www.ledger.com/">@Ledger</a>
           </p>
           <br />
           <ul className="text-md">
@@ -90,6 +81,8 @@ export default function Home() {
               </a>
             </li>
           </ul>
+          <br />
+          <Link href="/chat">Wanna chat?</Link>
         </div>
       </main>
     </div>
