@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
+import Card from '../components/card'
 
 export default function Home() {
   return (
@@ -46,8 +47,10 @@ export default function Home() {
             &nbsp;and&nbsp;
             <a href="https://www.isep.fr/">ISEP 🇫🇷&nbsp;</a>
             <br />
-            ex-Software Engineer Intern&nbsp;
-            <a href="https://www.ledger.com/">@ Ledger</a>
+            ex-Software Engineer Intern @&nbsp;
+            <a href="https://www.ledger.com/">Ledger</a>
+            &nbsp;and&nbsp;
+            <a href="https://www.idemia.com/">Idemia</a>
           </div>
           <br />
 
@@ -55,95 +58,77 @@ export default function Home() {
           <br />
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='https://verycurious.xyz'>
-                <div className="flex flex-row">
-                  <p className='text-xl'>Curious</p>
-                </div>
-              </a>
-              <p>My main side project. Working on a way to change the way we learn by providing custom knowledge just in time by using LLMs.</p>
-            </div>
+            <Card title="Curious"
+              description="My main side project. Working on a way to change the way we learn by providing custom knowledge just in time by using LLMs."
+              linkProd="https://verycurious.xyz"
+              backendStack="Python, FastAPI, PostgreSQL, Redis"
+              frontendStack="Next.js, TailwindCSS, Vercel">
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='https://map.verycurious.xyz'>
-                <div className="flex flex-row">
-                  <p className='text-xl'>Tailored tours</p>
-                </div>
-              </a>
-              <p>Implementation of the TSP on a database of 2000 real locations in France to help tourists plan their trip according to their time constraints.</p>
-            </div>
+            <Card title="Tailored tours"
+              description="Implementation of the TSP on a database of 2000 real locations in France to help tourists plan their trip according to their time constraints."
+              linkProd="https://map.verycurious.xyz"
+              backendStack='Go, Gin, SQLite'
+              frontendStack='Next.js, TailwindCSS, Vercel'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='https://plane-buddy.vercel.app/'>
-                <div className="flex flex-row">
-                  <p className='text-xl'>Plane buddy</p>
-                </div>
-              </a>
-              <p>Developed overnight to connect Berkeley BGA program students on flights to reach the campus. Achieved 200+ unique global visitors within 2 days, successfully facilitating meet-ups for several student groups.</p>
-            </div>
+            <Card title="Plane buddy"
+              description="Developed overnight to connect Berkeley BGA program students on flights to reach the campus. Achieved 200+ unique global visitors within 2 days, successfully facilitating meet-ups for several student groups."
+              linkProd="https://plane-buddy.vercel.app/"
+              backendStack='Node.js, Next.js, PostreSQL'
+              frontendStack='Next.js, TailwindCSS, Vercel'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='https://scanurl.thomascdnns.com/'>
-                <div className="flex flex-row">
-                  <p className='text-xl'>ScanURL</p>
-                </div>
-              </a>
-              <p>Just a silly website to gather WHOIS, IP, reverse DNS and redirections analysis of a URL or first level domain</p>
-            </div>
+            <Card title="ScanURL"
+              description="Just a silly website to gather WHOIS, IP, reverse DNS and redirections analysis of a URL or first level domain"
+              linkProd="https://scanurl.thomascdnns.com/"
+              backendStack='Python, Flask'
+              frontendStack='Jinja'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='https://scanurl.thomascdnns.com/'>
-                <div className="flex flex-row">
-                  <p className='text-xl'>Password Crusher</p>
-                </div>
-              </a>
-              <p>Website interface to retrieve cached cracked unsalted MD5 passwords</p>
-            </div>
+            <Card title="Password Crusher"
+              description="Website interface to retrieve cached cracked unsalted MD5 passwords"
+              linkProd="https://password-crusher.vercel.app/"
+              backendStack='Nest, Redis'
+              frontendStack='Angular'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='https://thomascdnns.com'>
-                <div className="flex flex-row">
-                  <p className='text-xl'>Portfolio</p>
-                </div>
-              </a>
-              <p>My personal website. You are on it right now.</p>
-            </div>
+            <Card title="Portfolio"
+              description="My personal website. You are on it right now. Using Next because I want to develop something more complex than a static website in the next version..."
+              linkProd="https://thomascdnns.com"
+              linkRepo="https://github.com/tchardonnens/portfolio"
+              backendStack='???'
+              frontendStack='Next.js, TailwindCSS, Vercel'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='' target='_blank' rel="noopener noreferrer">
-                <div className="flex flex-row">
-                  <p className='text-xl'>Chess game</p>
-                </div>
-              </a>
-              <p>Everything is in the name!</p>
-            </div>
+            <Card title="Flat Fall Race"
+              description='A 2D multiplayer, server based, race game made with JavaFX (GUI) and Kryonet (Network) as ISEP Project'
+              linkRepo='https://github.com/tchardonnens/flat-fall-race'
+              backendStack='Java, Kryonet'
+              frontendStack='JavaFX'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='' target='_blank' rel="noopener noreferrer">
-                <div className="flex flex-row">
-                  <p className='text-xl'>Flat Fall Race</p>
-                </div>
-              </a>
-              <p>Java multiplayer, server based, race game made with JavaFX (GUI) and Kryonet (Network) as ISEP Project</p>
-            </div>
+            <Card title="Chess game"
+              description="Terminal UI chess game made in Java. Did not finish it though, but it was a good way to practice."
+              linkRepo='https://github.com/tchardonnens/cours-java/tree/main/TP3_G7_Chardonnens/'
+              backendStack='Java'
+              frontendStack='In the terminal, not very fancy'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='' target='_blank' rel="noopener noreferrer">
-                <div className="flex flex-row">
-                  <p className='text-xl'>Monkus</p>
-                </div>
-              </a>
-              <p>A conversational sassy and roasting Discord bot using GPT3.5 API</p>
-            </div>
+            <Card title="Minecraft Server Dashboard"
+              description="Tiny vanilla website with a login system to start, stop and restart a Minecraft server with custom settings, choose map, mode (PVE or PVP), dark/light mode..."
+              linkRepo="https://github.com/tchardonnens/site-minecraft"
+              backendStack='PHP, JavaScript'
+              frontendStack='HTML, CSS'>
+            </Card>
 
-            <div className='flex flex-col bg-neutral-200 dark:bg-neutral-900 hover:ring hover:ring-black dark:hover:ring-white p-10 rounded-2xl'>
-              <a href='' target='_blank' rel="noopener noreferrer">
-                <div className="flex flex-row">
-                  <p className='text-xl'>Minecraft Server Dashboard</p>
-                </div>
-              </a>
-              <p>Tiny vanilla website with a login system to start, stop and restart a Minecraft server with custom settings, choose map, mode (PVE or PVP), dark/light mode...</p>
-            </div>
+            <Card title="Monkus"
+              description="A conversational sassy and roasting Discord bot using GPT3.5 API"
+              linkRepo="https://github.com/tchardonnens/monkus"
+              backendStack='JavaScript, GPT3.5 API'
+              frontendStack='Discord hahaha'>
+            </Card>
+
 
           </div>
         </div>
