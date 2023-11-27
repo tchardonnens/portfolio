@@ -3,6 +3,8 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
 import Card from '../components/card'
+import Image from 'next/image';
+import EducationIcon from '../components/educationIcon';
 
 export default function Home() {
   return (
@@ -21,7 +23,10 @@ export default function Home() {
         <meta property="og:url" content="https://portfolio.thomaschardonnens.com" />
       </Head>
       <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-black dark:text-neutral-200 mt-4 mb-4">
-        <div className="w-5/6 md:w-3/4 lg:w-5/6">
+        <div className="mt-4 w-5/6 md:w-3/4 lg:w-5/6">
+          <div className="flex flex-row justify-center items-center mb-5">
+            <Image src="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" alt='PHOTO DE MOI' width={200} height={200} className='rounded-full' />
+          </div>
           <p className="text-4xl text-center">
             Thomas Chardonnens
           </p>
@@ -37,22 +42,29 @@ export default function Home() {
               <button className='bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-lg text-xl border-2'><FaLinkedinIn /></button>
             </a>
           </div>
-
           <br />
-          <div className="text-md text-center">
+          <div className="text-md text-center leading-relaxed">
             <p className='text-2xl'>About me</p>
             <br />
             CS Master student @&nbsp;
-            <a href="https://www.berkeley.edu/">UC Berkeley 🇺🇸</a>
+            <a href="https://www.berkeley.edu/">University of California, Berkeley 🇺🇸</a>
             &nbsp;and&nbsp;
-            <a href="https://www.isep.fr/">ISEP 🇫🇷&nbsp;</a>
+            <a href="https://www.isep.fr/">ISEP Paris 🇫🇷</a>
             <br />
             ex-Software Engineer Intern @&nbsp;
             <a href="https://www.ledger.com/">Ledger</a>
             &nbsp;and&nbsp;
             <a href="https://www.idemia.com/">Idemia</a>
+            <br />
+            <br />
+            Studying about NLP, Machine Learning and AI agents.
+            <br />
+            My strongest skillset is web development (fullstack) but I am also interested in cybersecurity and blockchain.
+            <br />
+            As a techno-optimist, I believe in the power of technology to accelerate the growth of the human species.
           </div>
           <br />
+
 
           <h2 className='text-2xl text-center'>Some of my projects</h2>
           <br />
@@ -68,6 +80,7 @@ export default function Home() {
             <Card title="Tailored tours"
               description="Implementation of the TSP on a database of 2000 real locations in France to help tourists plan their trip according to their time constraints."
               linkProd="https://map.verycurious.xyz"
+              linkRepo='https://github.com/tchardonnens/t3-back'
               backendStack='Go, Gin, SQLite'
               frontendStack='Next.js, TailwindCSS, Vercel'>
             </Card>
@@ -75,6 +88,7 @@ export default function Home() {
             <Card title="Plane buddy"
               description="Developed overnight to connect Berkeley BGA program students on flights to reach the campus. Achieved 200+ unique global visitors within 2 days, successfully facilitating meet-ups for several student groups."
               linkProd="https://plane-buddy.vercel.app/"
+              linkRepo='https://github.com/tchardonnens/planeBuddy'
               backendStack='Node.js, Next.js, PostreSQL'
               frontendStack='Next.js, TailwindCSS, Vercel'>
             </Card>
@@ -82,13 +96,14 @@ export default function Home() {
             <Card title="ScanURL"
               description="Just a silly website to gather WHOIS, IP, reverse DNS and redirections analysis of a URL or first level domain"
               linkProd="https://scanurl.thomascdnns.com/"
+              linkRepo='https://github.com/tchardonnens/scanurl/tree/2c8aa86b953dd2dbef8a7c999c762674873e576b'
               backendStack='Python, Flask'
               frontendStack='Jinja'>
             </Card>
 
             <Card title="Password Crusher"
               description="Website interface to retrieve cached cracked unsalted MD5 passwords"
-              linkProd="https://password-crusher.vercel.app/"
+              linkRepo='https://github.com/tchardonnens/pwd-crusher-back'
               backendStack='Nest, Redis'
               frontendStack='Angular'>
             </Card>
@@ -131,6 +146,19 @@ export default function Home() {
 
 
           </div>
+          <br />
+          <div className="text-md text-center leading-loose">
+            <p className='text-2xl'>A little more about me</p>
+            <br />
+            21 years old, I love running and Korean food 🇰🇷 (my next trip is definitely Seoul).
+            <br />
+            My favorite books are probably The Hobbit, 1984 and Atomic Habits.
+            <br />
+            A big fan of The Office.
+            <br />
+            Finished Hades and Cyberpunk 2077 in solo and love playing Minecraft and Valorant (Plat 3) with my friends.
+          </div>
+          <br />
         </div>
       </main >
     </>
