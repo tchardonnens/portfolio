@@ -7,7 +7,6 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-
     <>
       <Head>
         <title>Thomas Chardonnens</title>
@@ -54,9 +53,9 @@ export default function Home() {
             <br />
             <strong>Master&apos;s Candidate in Computer Science</strong>
             <br />
-            <a href="https://www.berkeley.edu/">University of California, Berkeley 🇺🇸 </a>
-            and
-            <a href="https://www.isep.fr/"> ISEP Paris 🇫🇷</a>
+            <a href="https://www.berkeley.edu/">University of California, Berkeley 🇺🇸</a>
+            {' '}and{' '}
+            <a href="https://www.isep.fr/">ISEP Paris 🇫🇷</a>
             <br />
             Expected Graduation: Summer 2024
             <br />
@@ -73,18 +72,12 @@ export default function Home() {
             <a href="https://www.idemia.com/">Idemia</a> – Leader in identity technologies
             <br />
             <br />
-            <br />
             Studying NLP, Machine Learning, and AI agents.
             <br />
-            My strongest skillset is fullstack web development but I am also interested in cybersecurity and blockchain.
-            <br />
-            As a techno-optimist, I believe in the power of technology to accelerate the growth of the human species.
+            My strongest skillset is fullstack web development but I am also interested in cybersecurity.
           </div>
-        <br />
-
-
-
-          <h2 className='text-2xl text-center'>Some of my projects</h2>
+          <br />
+          <h2 className='text-2xl text-center'>Some of my silly projects</h2>
           <br />
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
@@ -155,19 +148,22 @@ export default function Home() {
               frontendStack='Discord hahaha'>
             </Card>
 
-
           </div>
           <br />
           <div className="text-md text-center leading-loose">
             <p className='text-2xl'>A little more about me</p>
             <br />
-            22 years old, I love running and Korean food 🇰🇷 (my next trip is definitely Seoul).
+            22 years old, I love running and Korean food 🇰🇷.
+            Visited Seoul last May. This city is fantastic 😍.
+            Still wondering what my next trip will be 🤔.
             <br />
             My favorite books are probably The Hobbit, 1984 and Atomic Habits.
             <br />
             A big fan of The Office.
+            Watching some of the most popular KDramas to stay up to date with my friends!
+            I really liked The Glory, Doona and King The Land.
             <br />
-            Finished Hades and Cyberpunk 2077 in solo and love playing Minecraft and Valorant (Plat 3) with my friends.
+            Finished Hades and Cyberpunk 2077 in solo and relax by playing Minecraft and Valorant with my friends.
           </div>
           <br />
         </div>
