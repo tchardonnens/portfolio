@@ -34,7 +34,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const Post: React.FC<PostProps> = ({ postData }) => {
   return (
     <>
-      <div className="bg-neutral-100 p-2">
+      <div className="bg-neutral-100 dark:bg-neutral-900 p-2">
         <Link href="/blog" className="text-lg text-blue-600 hover:text-blue-800 dark:hover:text-blue-400">
           Back to posts list
         </Link>
