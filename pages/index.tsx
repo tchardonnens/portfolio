@@ -166,6 +166,24 @@ export default function Home() {
             Finished Hades and Cyberpunk 2077 in solo and relax by playing Minecraft and Valorant with my friends.
           </div>
           <br />
+          <h2 className='text-2xl text-center'>Blog</h2>
+          <br />
+          <div className="flex flex-col items-center">
+            <a href="/blog">
+              <button className="bg-transparent border-none bg-gradient-to-r from-purple-500 via-red-500 to-orange-500 text-white font-semibold py-5 px-4 rounded no-underline dark:no-underline hover:bg-orange-500 hover:text-white hover:dark:bg-orange-600">
+                Read my blog here!
+              </button>
+            </a>
+          </div>
+          <br />
+          <h2 className='text-2xl text-center'>Chat with me</h2>
+          <br />
+          <div className="flex flex-col items-center">
+            <button className="bg-transparent border-none cursor-not-allowed bg-neutral-500 text-neutral-200 font-semibold py-5 px-4 rounded no-underline dark:no-underline">
+              (Coming soon...)
+            </button>
+          </div>
+          <br />
         </div>
       </main >
     </>
