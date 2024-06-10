@@ -64,7 +64,7 @@ const Home: React.FC<HomeProps> = ({ allPostsData }) => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
               {filteredPosts.map(({ id, date, title }) => (
-                <a key={id} href={`/blog/${id}`} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center bg-transparent border-none bg-gradient-to-r from-purple-500 via-red-500 to-orange-500 text-white font-semibold py-5 px-4 rounded no-underline dark:no-underline hover:bg-orange-500 hover:text-white hover:dark:bg-orange-600">
+                <a key={id} href={`/blog/${id}`} className="flex flex-col items-center bg-transparent border-none bg-gradient-to-r from-purple-500 via-red-500 to-orange-500 text-white font-semibold py-5 px-4 rounded no-underline dark:no-underline hover:bg-orange-500 hover:text-white hover:dark:bg-orange-600">
                   <button className='flex flex-col items-center'>
                     {title}
                     <p className="text-sm">{date.split('-').reverse().join('/')}</p>

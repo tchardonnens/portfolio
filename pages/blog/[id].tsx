@@ -43,7 +43,7 @@ const Post: React.FC<PostProps> = ({ postData }) => {
         <Head>
           <title>{postData.title}</title>
         </Head>
-        <article className="flex flex-col py-10 px-64 w-full space-y-8 text-neutral-800 dark:text-white">
+        <article className="flex flex-col py-5 px-10 space-y-8 w-full text-neutral-800 dark:text-white">
           <h1 className="text-4xl">{postData.title}</h1>
           <p>Published: {postData.date.split('-').reverse().join('/')}</p>
           <div className="leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
