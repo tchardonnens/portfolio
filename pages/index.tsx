@@ -4,7 +4,6 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
 import Card from '../components/card'
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -28,7 +27,7 @@ export default function Home() {
         <meta name="twitter:description" content="Personal Website" />
         <meta name="twitter:image" content="https://twitter.com/thomas_chardo/header_photo" />
       </Head>
-      <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-black dark:text-neutral-200 mt-4 mb-4">
+      <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 mt-4 mb-4">
         <div className="mt-4 w-5/6 md:w-3/4 lg:w-5/6">
           <div className="flex flex-row justify-center items-center mb-5">
             <Image src="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" alt='PHOTO DE MOI' width={200} height={200} className='rounded-full' />
@@ -52,21 +51,21 @@ export default function Home() {
           <div className="text-lg text-center leading-relaxed">
             <p className='text-2xl'>About me</p>
             <br />
-            <strong>Master&apos;s Candidate in Computer Science</strong>
+            <strong>M.S. in Computer Science</strong>
             <br />
-            <a href="https://www.berkeley.edu/">University of California, Berkeley 🇺🇸</a>
-            {' '}and{' '}
             <a href="https://www.isep.fr/">ISEP Paris 🇫🇷</a>
+            {' '}and{' '}
+            <a href="https://www.berkeley.edu/">University of California, Berkeley 🇺🇸</a>
             <br />
-            Expected Graduation: Summer 2024
+            <br />
+            <strong>Software Engineer</strong>
+            <br />
+            <a href="https://rockfi.fr/">RockFi</a> – Private wealth management startup
             <br />
             <br />
-            <strong>Software Engineer Intern</strong>
+            <strong>Software Engineer Internships</strong>
             <br />
             <a href="https://qonto.com/en">Qonto</a> – European leader in neobanking for SMEs
-            <br />
-            <br />
-            <strong>Previous internships</strong>
             <br />
             <a href="https://www.ledger.com/">Ledger</a> – Leader in security for crypto-assets
             <br />
@@ -167,20 +166,10 @@ export default function Home() {
             Finished Hades and Cyberpunk 2077 in solo and relax by playing Minecraft and Valorant with my friends.
           </div>
           <br />
-          <h2 className='text-2xl text-center'>Blog</h2>
-          <br />
-          <div className="flex flex-col items-center">
-            <Link href="/blog">
-              <button className="bg-transparent border-none bg-gradient-to-r from-purple-500 via-red-500 to-orange-500 text-white font-semibold py-5 px-4 rounded no-underline dark:no-underline hover:bg-orange-500 hover:text-white hover:dark:bg-orange-600">
-                Read my blog here!
-              </button>
-            </Link>
-          </div>
-          <br />
           <h2 className='text-2xl text-center'>Chat with me</h2>
           <br />
           <div className="flex flex-col items-center">
-            <button className="bg-transparent border-none cursor-not-allowed bg-neutral-500 text-neutral-200 font-semibold py-5 px-4 rounded no-underline dark:no-underline">
+            <button className="bg-transparent border-none cursor-not-allowed bg-neutral-500 py-2 px-4 rounded no-underline dark:no-underline">
               (Coming soon...)
             </button>
           </div>
