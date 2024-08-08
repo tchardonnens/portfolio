@@ -78,7 +78,7 @@ export default function Home() {
               My strongest skillset is fullstack web development but I am also interested in cybersecurity.
             </p>
           </section>
-          <section className="text-lg text-center leading-relaxed space-y-4 mt-8">
+          <section className="text-lg leading-relaxed space-y-4 mt-8">
             <h2 className='text-2xl'>Some of my silly projects</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
