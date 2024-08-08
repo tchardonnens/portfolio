@@ -79,7 +79,7 @@ export default function Home() {
             </p>
           </section>
           <section className="text-lg leading-relaxed space-y-4 mt-8">
-            <h2 className='text-2xl'>Some of my silly projects</h2>
+            <h2 className='text-2xl text-center'>Some of my silly projects</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
               <Card title="Tailored tours"
