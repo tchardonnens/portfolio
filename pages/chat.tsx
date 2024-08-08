@@ -43,8 +43,8 @@ export default function Chat() {
   return (
     <>
       <Head>
-        <title>Thomas Artefact</title>
-        <meta name="description" content="Thomas Artefact" />
+        <title>Thomas Engram</title>
+        <meta name="description" content="Thomas Engram" />
         <style>{`
           @keyframes glowingBorder {
             0% { box-shadow: 0 0 3px #8A2BE2, 0 0 12px #8A2BE2, 0 0 7px #8A2BE2, 0 0 10px #8A2BE2; }
