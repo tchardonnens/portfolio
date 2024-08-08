@@ -17,7 +17,7 @@ export default function Chat() {
 
     try {
       // Send the message to your backend API
-      const response = await fetch('/api/chat', {
+      const response = await fetch('http://localhost:8000/v1/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,8 +43,8 @@ export default function Chat() {
   return (
     <>
       <Head>
-        <title>Thomas Artifact</title>
-        <meta name="description" content="Thomas Artifact" />
+        <title>Thomas Artefact</title>
+        <meta name="description" content="Thomas Artefact" />
         <style>{`
           @keyframes glowingBorder {
             0% { box-shadow: 0 0 3px #8A2BE2, 0 0 12px #8A2BE2, 0 0 7px #8A2BE2, 0 0 10px #8A2BE2; }
