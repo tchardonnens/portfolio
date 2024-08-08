@@ -18,14 +18,14 @@ export default function Home() {
 
         <meta property="og:title" content="Thomas Chardonnens" />
         <meta property="og:description" content="Personal Website" />
-        <meta property="og:image" content="https://twitter.com/thomas_chardo/header_photo" />
+        <meta property="og:image" content="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" />
         <meta property="og:url" content="https://portfolio.thomaschardonnens.com" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Thomas Chardonnens" />
         <meta name="twitter:description" content="Personal Website" />
-        <meta name="twitter:image" content="https://twitter.com/thomas_chardo/header_photo" />
+        <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" />
       </Head>
       <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 mt-4 mb-4">
         <div className="mt-4 w-5/6 md:w-3/4 lg:w-5/6">
@@ -50,6 +50,9 @@ export default function Home() {
           <br />
           <div className="text-lg text-center leading-relaxed">
             <p className='text-2xl'>About me</p>
+            <br />
+            <strong>📍 Based in Paris, France</strong>
+            <br />
             <br />
             <strong>M.S. in Computer Science</strong>
             <br />
