@@ -4,6 +4,7 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
 import Card from '../components/card'
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -167,11 +168,9 @@ export default function Home() {
             Finished Hades and Cyberpunk 2077 in solo and relax by playing Minecraft and Valorant with my friends.
           </section>
           <br />
-          <h2 className='text-2xl text-center'>Chat with me</h2>
-          <br />
           <section className="flex flex-col items-center">
             <button className="bg-transparent border-none cursor-not-allowed bg-neutral-500 py-2 px-4 rounded no-underline dark:no-underline">
-              (Coming soon...)
+              <Link href="/chat">Chat with me</Link>
             </button>
           </section>
         </div>
