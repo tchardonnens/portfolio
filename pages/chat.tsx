@@ -1,10 +1,21 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import SiriSphereLogo from '../components/siriSphereLogo';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Chat() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [inputMessage, setInputMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [chatId] = useState(() => uuidv4());
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -14,10 +25,9 @@ export default function Chat() {
     const newMessages = [...messages, { role: 'user', content: inputMessage }];
     setMessages(newMessages);
     setInputMessage('');
-
     try {
       // Send the message to your backend API
-      const response = await fetch('http://localhost:8000/v1/chat', {
+      const response = await fetch(`http://localhost:8000/v1/chat/${chatId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,13 +36,20 @@ export default function Chat() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to get response');
+      }
+
+      if (!response.ok) {
         throw new Error('Failed to get response');
       }
 
       const data = await response.json();
 
-      // Add AI response to the chat
-      setMessages([...newMessages, { role: 'assistant', content: data.response }]);
+      // Add AI responses to the chat
+      const aiResponses = data.response as string[];
+      const newAIMessages = aiResponses.map(content => ({ role: 'assistant', content }));
+      setMessages([...newMessages, ...newAIMessages]);
     } catch (error) {
       console.error('Error:', error);
       // Add an error message to the chat
@@ -69,6 +86,7 @@ export default function Chat() {
                 </span>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
           <form onSubmit={handleSubmit} className="flex">
             <input
