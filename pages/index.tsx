@@ -82,6 +82,13 @@ export default function Home() {
             <h2 className='text-2xl text-center'>Some of my silly projects</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
+              <Card title="Qonto Customer Support Chatbot"
+                description="RAG chatbot to help Qonto customers with their questions. Handles 50%+ of customer conversations autonomously and reduced time to solve user issues by 44% for 500k customers."
+                linkProd='https://medium.com/qonto-way/meet-qontos-new-genai-chatbot-faster-smarter-and-ready-to-serve-with-mistral-s-power-e5fde2684e46'
+                backendStack='RAG and Mistral AI model'
+                frontendStack='Qonto website and apps'>
+              </Card>
+
               <Card title="Tailored tours"
                 description="Implementation of the TSP on a database of 2000 real locations in France to help tourists plan their trip according to their time constraints."
                 linkProd="https://map.verycurious.xyz"
