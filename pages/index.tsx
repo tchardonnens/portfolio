@@ -89,6 +89,13 @@ export default function Home() {
                 frontendStack='Qonto website and apps'>
               </Card>
 
+              <Card title="EEG Seizure Detection AI"
+                description="CNN model that detects seizures from EEG brain wave data with 86% accuracy. Processes EEG signals into images for automated medical analysis, helping doctors identify seizure patterns."
+                linkRepo='https://huggingface.co/ThomasCdnns/EEG-Seizure-Detection'
+                backendStack='Python, PyTorch'
+                frontendStack='HuggingFace'>
+              </Card>
+
               <Card title="Tailored tours"
                 description="Implementation of the TSP on a database of 2000 real locations in France to help tourists plan their trip according to their time constraints."
                 linkProd="https://map.verycurious.xyz"
