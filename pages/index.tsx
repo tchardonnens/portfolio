@@ -4,6 +4,7 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
 import Card from '../components/card'
 import Image from 'next/image';
+import VariableFontHoverByLetter from "../components/fancy/variable-font-hover-by-letter"
 
 export default function Home() {
   return (
@@ -12,8 +13,6 @@ export default function Home() {
         <title>Thomas Chardonnens</title>
         <meta name="description" content="Thomas Chardonnens - Personal Website" />
         <link rel="icon" href="https://pbs.twimg.com/profile_images/1449466562591723522/3MyO9dFd_400x400.jpg" type="image/jpg" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <meta property="og:title" content="Thomas Chardonnens" />
@@ -27,61 +26,83 @@ export default function Home() {
         <meta name="twitter:description" content="Personal Website" />
         <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" />
       </Head>
-      <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 mt-4 mb-4">
-        <div className="mt-4 w-5/6 md:w-3/4 lg:w-5/6">
-          <div className="flex flex-row justify-center items-center mb-5">
-            <Image src="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" alt='PHOTO DE MOI' width={200} height={200} className='rounded-full' />
+      <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 mt-8 mb-8 font-sans max-w-7xl px-4">
+        <div className="w-full">
+          <div className="flex flex-row justify-center items-center mb-8">
+            <Image src="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" alt='Profile Photo' width={200} height={200} className='rounded-full shadow-lg' />
           </div>
-          <p className="text-4xl text-center">
+          <h1 className="text-5xl font-bold text-center mb-8">
             Thomas Chardonnens
-          </p>
-          <br />
-          <div className="flex flex-row sm:w-48 justify-center items-center text-center space-x-6 mx-auto">
+          </h1>
+
+          <div className="flex flex-row justify-center items-center space-x-8 mb-12">
             <a href="https://twitter.com/thomas_chardo" target="_blank" rel="noopener noreferrer">
-              <button className='bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-lg text-xl border-2'><FaXTwitter /></button>
+              <button className='bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-lg text-xl border-2 hover:scale-110 transition-transform'><FaXTwitter /></button>
             </a>
             <a href="https://github.com/tchardonnens" target="_blank" rel="noopener noreferrer">
-              <button className='bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-lg text-xl border-2'><FaGithub /></button>
+              <button className='bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-lg text-xl border-2 hover:scale-110 transition-transform'><FaGithub /></button>
             </a>
             <a href="https://www.linkedin.com/in/thomaschardonnens/" target="_blank" rel="noopener noreferrer">
-              <button className='bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-lg text-xl border-2'><FaLinkedinIn /></button>
+              <button className='bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-lg text-xl border-2 hover:scale-110 transition-transform'><FaLinkedinIn /></button>
             </a>
           </div>
-          <br />
-          <section className="text-lg text-center leading-relaxed space-y-8">
-            <h2 className='text-2xl'>About me</h2>
-            <p>📍 Based in Paris, France</p>
-            <p>
-              <strong>M.S. in Computer Science</strong>
-              <br />
-              <a href="https://www.isep.fr/">ISEP Paris 🇫🇷</a>
-              {' '}and{' '}
-              <a href="https://www.berkeley.edu/">University of California, Berkeley 🇺🇸</a>
-            </p>
-            <p>
-              <strong>Software Engineer</strong>
-              <br />
-              <a href="https://rockfi.fr/">RockFi</a> – Private wealth management startup
-            </p>
-            <p>
-              <strong>Software Engineer Internships</strong>
-              <br />
-              <a href="https://qonto.com/en">Qonto</a> – European leader in neobanking for SMEs
-              <br />
-              <a href="https://www.ledger.com/">Ledger</a> – Leader in security for crypto-assets
-              <br />
-              <a href="https://www.idemia.com/">Idemia</a> – Leader in identity technologies
-            </p>
-            <p>
-              Studying NLP, Machine Learning, and AI agents.
-              <br />
-              My strongest skillset is fullstack web development but I am also interested in cybersecurity.
+
+          <section className="text-lg text-center leading-relaxed space-y-10 mb-16">
+            <h2 className='text-3xl font-semibold'>About me</h2>
+            <p className="text-xl">📍 Based in Paris, France</p>
+
+            <div className="flex flex-col space-y-2 cursor-pointer">
+              <VariableFontHoverByLetter
+                label="M.S. in Electronic Engineering and Computer Science"
+                staggerDuration={0.03}
+                fromFontVariationSettings="'wght' 400, 'slnt' 0"
+                toFontVariationSettings="'wght' 900, 'slnt' -10"
+              />
+              <div className="text-lg">
+                <a href="https://www.isep.fr/" className="hover:text-blue-600 dark:hover:text-blue-400">ISEP Paris 🇫🇷</a>
+                {' '}and{' '}
+                <a href="https://www.berkeley.edu/" className="hover:text-blue-600 dark:hover:text-blue-400">University of California, Berkeley 🇺🇸</a>
+              </div>
+            </div>
+
+            <div className="flex flex-col space-y-2 cursor-pointer">
+              <VariableFontHoverByLetter
+                label="Software Engineer"
+                staggerDuration={0.03}
+                fromFontVariationSettings="'wght' 400, 'slnt' 0"
+                toFontVariationSettings="'wght' 900, 'slnt' -10"
+              />
+              <div className="text-lg">
+                <a href="https://mistral.ai/" className="hover:text-blue-600 dark:hover:text-blue-400">Mistral AI</a> – French AI lab
+                <br />
+                <a href="https://rockfi.fr/" className="hover:text-blue-600 dark:hover:text-blue-400">RockFi</a> – Private wealth management startup
+              </div>
+            </div>
+
+            <div className="flex flex-col space-y-2 cursor-pointer">
+              <VariableFontHoverByLetter
+                label="Software Engineer Internships"
+                staggerDuration={0.03}
+                fromFontVariationSettings="'wght' 400, 'slnt' 0"
+                toFontVariationSettings="'wght' 900, 'slnt' -10"
+              />
+              <div className="text-lg">
+                <a href="https://qonto.com/en" className="hover:text-blue-600 dark:hover:text-blue-400">Qonto</a> – European leader in neobanking for SMEs
+                <br />
+                <a href="https://www.ledger.com/" className="hover:text-blue-600 dark:hover:text-blue-400">Ledger</a> – Leader in security for crypto-assets
+                <br />
+                <a href="https://www.idemia.com/" className="hover:text-blue-600 dark:hover:text-blue-400">Idemia</a> – Leader in identity technologies
+              </div>
+            </div>
+
+            <p className="text-xl max-w-2xl mx-auto">
+              Mainly interested in searching for new ways to compress knowledge and make it transferable.
             </p>
           </section>
-          <section className="text-lg leading-relaxed space-y-4 mt-8">
-            <h2 className='text-2xl text-center'>Some of my silly projects</h2>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
+          <section className="space-y-8 mb-16">
+            <h2 className='text-3xl font-semibold text-center mb-8'>Some of my silly projects</h2>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
               <Card title="Qonto Customer Support Chatbot"
                 description="RAG chatbot to help Qonto customers with their questions. Handles 50%+ of customer conversations autonomously and reduced time to solve user issues by 44% for 500k customers."
                 linkProd='https://medium.com/qonto-way/meet-qontos-new-genai-chatbot-faster-smarter-and-ready-to-serve-with-mistral-s-power-e5fde2684e46'
@@ -108,7 +129,7 @@ export default function Home() {
                 description="Developed overnight to connect Berkeley BGA program students on flights to reach the campus. Achieved 200+ unique global visitors within 2 days, successfully facilitating meet-ups for several student groups."
                 linkProd="https://plane-buddy.vercel.app/"
                 linkRepo='https://github.com/tchardonnens/planeBuddy'
-                backendStack='Node.js, Next.js, PostreSQL'
+                backendStack='Node.js, Next.js, PostgreSQL'
                 frontendStack='Next.js, Vercel'>
               </Card>
 
@@ -162,34 +183,41 @@ export default function Home() {
                 backendStack='JavaScript, GPT3.5 API'
                 frontendStack='Discord hahaha'>
               </Card>
-
             </div>
           </section>
-          <section className="text-md text-center leading-loose space-y-4 mt-8">
-            <h2 className='text-2xl'>A little more about me</h2>
-            <br />
-            22 years old, I love running and Korean food 🇰🇷.
-            Visited Seoul last May. This city is fantastic 😍.
-            Still wondering what my next trip will be 🤔.
-            <br />
-            My favorite books are probably The Hobbit, 1984 and Atomic Habits.
-            <br />
-            A big fan of The Office.
-            Watching some of the most popular KDramas to stay up to date with my friends!
-            I really liked The Glory, Doona and King The Land.
-            <br />
-            Finished Hades and Cyberpunk 2077 in solo and relax by playing Minecraft and Valorant with my friends.
+
+          <section className="text-lg text-center leading-relaxed space-y-6 mb-16">
+            <h2 className='text-3xl font-semibold mb-8'>A little more about me</h2>
+
+            <p className="max-w-2xl mx-auto">
+              22 years old, I love running and Korean food 🇰🇷.<br />
+              Visited Seoul last May. This city is fantastic 😍.<br />
+              Still wondering what my next trip will be 🤔.
+            </p>
+
+            <p className="max-w-2xl mx-auto">
+              My favorite books are probably The Hobbit, 1984 and Atomic Habits.
+            </p>
+
+            <p className="max-w-2xl mx-auto">
+              A big fan of The Office.<br />
+              Watching some of the most popular KDramas to stay up to date with my friends!<br />
+              I really liked The Glory, Doona and King The Land.
+            </p>
+
+            <p className="max-w-2xl mx-auto">
+              Finished Hades and Cyberpunk 2077 in solo and relax by playing Minecraft and Valorant with my friends.
+            </p>
           </section>
-          <br />
-          <h2 className='text-2xl text-center'>Chat with me</h2>
-          <br />
-          <section className="flex flex-col items-center">
-            <button className="bg-transparent border-none cursor-not-allowed bg-neutral-500 py-2 px-4 rounded no-underline dark:no-underline">
+
+          <section className="text-center mb-8">
+            <h2 className='text-3xl font-semibold mb-8'>Chat with me</h2>
+            <button className="bg-neutral-500 py-3 px-6 rounded-lg text-white opacity-50 cursor-not-allowed text-lg">
               (Coming soon...)
             </button>
           </section>
         </div>
-      </main >
+      </main>
     </>
   )
 }
