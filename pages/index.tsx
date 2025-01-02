@@ -26,7 +26,7 @@ export default function Home() {
         <meta name="twitter:description" content="Personal Website" />
         <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" />
       </Head>
-      <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 mt-8 mb-8 font-sans max-w-7xl px-4">
+      <main className="flex flex-col mx-auto justify-center items-center min-h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 pt-8 pb-8 font-sans max-w-7xl px-4">
         <div className="w-full">
           <div className="flex flex-row justify-center items-center mb-8">
             <Image src="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg" alt='Profile Photo' width={200} height={200} className='rounded-full shadow-lg' />
