@@ -13,8 +13,8 @@
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
     "@types/node": "18.11.9",
-    "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.6",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
     "@vercel/analytics": "^0.1.11",
     "autoprefixer": "^10.4.14",
     "eslint": "8.28.0",
@@ -24,8 +24,8 @@
     "motion": "^11.15.0",
     "next": "15.3.3",
     "postcss": "^8.4.21",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-icons": "^4.12.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
@@ -37,7 +37,7 @@
     "@types/lodash": "^4.17.13"
   },
   "overrides": {
-    "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.6"
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0"
   }
 }
