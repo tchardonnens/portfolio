@@ -4,7 +4,6 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
 import Card from '../components/card'
 import Image from 'next/image';
-import VariableFontHoverByLetter from "../components/fancy/variable-font-hover-by-letter"
 
 export default function Home() {
   return (
@@ -52,12 +51,7 @@ export default function Home() {
             <p className="text-xl">📍 Based in Paris, France</p>
 
             <div className="flex flex-col space-y-2 cursor-pointer">
-              <VariableFontHoverByLetter
-                label="M.S. in Electronic Engineering and Computer Science"
-                staggerDuration={0.03}
-                fromFontVariationSettings="'wght' 400, 'slnt' 0"
-                toFontVariationSettings="'wght' 900, 'slnt' -10"
-              />
+              <p className="text-xl">M.S. in Electronic Engineering and Computer Science</p>
               <div className="text-lg">
                 <a href="https://www.isep.fr/" className="hover:text-blue-600 dark:hover:text-blue-400">ISEP Paris 🇫🇷</a>
                 {' '}and{' '}
@@ -66,12 +60,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col space-y-2 cursor-pointer">
-              <VariableFontHoverByLetter
-                label="Software Engineer"
-                staggerDuration={0.03}
-                fromFontVariationSettings="'wght' 400, 'slnt' 0"
-                toFontVariationSettings="'wght' 900, 'slnt' -10"
-              />
+              <p className="text-xl">Software Engineer</p>
               <div className="text-lg">
                 <a href="https://mistral.ai/" className="hover:text-blue-600 dark:hover:text-blue-400">Mistral AI</a> – French AI lab
                 <br />
@@ -80,12 +69,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col space-y-2 cursor-pointer">
-              <VariableFontHoverByLetter
-                label="Software Engineer Internships"
-                staggerDuration={0.03}
-                fromFontVariationSettings="'wght' 400, 'slnt' 0"
-                toFontVariationSettings="'wght' 900, 'slnt' -10"
-              />
+              <p className="text-xl">Software Engineer Internships</p>
               <div className="text-lg">
                 <a href="https://qonto.com/en" className="hover:text-blue-600 dark:hover:text-blue-400">Qonto</a> – European leader in neobanking for SMEs
                 <br />
