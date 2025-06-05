@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className="bg-white dark:bg-neutral-950">
+    <div className="bg-neutral-50 dark:bg-neutral-950">
       <Component {...pageProps} />
       <Analytics />
     </div>
