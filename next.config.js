@@ -7,8 +7,8 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'pbs.twimg.com',
-        port: ''
-      }
-    ]
+        port: '',
+      },
+    ],
   },
-}
+};
