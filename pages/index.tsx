@@ -165,9 +165,10 @@ export default function Home() {
               </AnimatedElement>
             </div>
 
-            <AnimatedElement as="p" delay={1.1} className="mx-auto max-w-2xl text-sm">
-              Mainly interested in searching for new ways to compress knowledge and make it
-              transferable.
+            <AnimatedElement as="p" delay={1.1} className="mx-auto max-w-2xl text-sm ">
+              Mainly interested in searching for new ways
+              <br />
+              to compress knowledge and make it transferable.
             </AnimatedElement>
           </section>
 
