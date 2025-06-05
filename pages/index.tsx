@@ -1,104 +1,116 @@
-import Head from 'next/head';
 import { FaXTwitter } from 'react-icons/fa6';
 import { FaLinkedinIn } from 'react-icons/fa6';
 import { FaGithub } from 'react-icons/fa6';
+import { motion } from 'framer-motion';
 import Card from '../components/card';
 import Image from 'next/image';
+import CustomHead from '../components/head';
+import AnimatedElement from '../components/animated-element';
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Thomas Chardonnens</title>
-        <meta name="description" content="Thomas Chardonnens - Personal Website" />
-        <link
-          rel="icon"
-          href="https://pbs.twimg.com/profile_images/1449466562591723522/3MyO9dFd_400x400.jpg"
-          type="image/jpg"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <meta property="og:title" content="Thomas Chardonnens" />
-        <meta property="og:description" content="Personal Website" />
-        <meta
-          property="og:image"
-          content="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg"
-        />
-        <meta property="og:url" content="https://portfolio.thomaschardonnens.com" />
-        <meta property="og:type" content="website" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Thomas Chardonnens" />
-        <meta name="twitter:description" content="Personal Website" />
-        <meta
-          name="twitter:image"
-          content="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg"
-        />
-      </Head>
-      <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center bg-white px-4 pb-8 pt-8 font-sans text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+      <CustomHead />
+      <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center bg-neutral-50 px-4 pb-8 pt-8 font-['JetBrains_Mono'] text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
         <div className="w-full">
-          <div className="mb-8 flex flex-row items-center justify-center">
+          <div className="mb-6 flex flex-row items-center justify-center">
             <Image
               src="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg"
               alt="Profile Photo"
-              width={200}
-              height={200}
+              width={150}
+              height={150}
               className="rounded-full shadow-lg"
             />
           </div>
-          <h1 className="mb-8 text-center text-5xl font-bold">Thomas Chardonnens</h1>
+          <AnimatedElement
+            as="h1"
+            className="font-base mb-6 text-center font-['Schibsted_Grotesk'] text-3xl"
+          >
+            Thomas Chardonnens
+          </AnimatedElement>
 
-          <div className="mb-12 flex flex-row items-center justify-center space-x-8">
+          <div className="mb-8 flex flex-row items-center justify-center space-x-6">
             <a href="https://twitter.com/thomas_chardo" target="_blank" rel="noopener noreferrer">
-              <button className="rounded-lg border-2 bg-white px-6 py-3 text-xl text-black transition-transform hover:scale-110 dark:bg-black dark:text-white">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="rounded-lg border-2 bg-neutral-50 px-6 py-2 text-xl text-black dark:bg-black dark:text-white"
+              >
                 <FaXTwitter />
-              </button>
+              </motion.button>
             </a>
             <a href="https://github.com/tchardonnens" target="_blank" rel="noopener noreferrer">
-              <button className="rounded-lg border-2 bg-white px-6 py-3 text-xl text-black transition-transform hover:scale-110 dark:bg-black dark:text-white">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="rounded-lg border-2 bg-neutral-50 px-6 py-2 text-xl text-black dark:bg-black dark:text-white"
+              >
                 <FaGithub />
-              </button>
+              </motion.button>
             </a>
             <a
               href="https://www.linkedin.com/in/thomaschardonnens/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <button className="rounded-lg border-2 bg-white px-6 py-3 text-xl text-black transition-transform hover:scale-110 dark:bg-black dark:text-white">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="rounded-lg border-2 bg-white px-6 py-2 text-xl text-black dark:bg-black dark:text-white"
+              >
                 <FaLinkedinIn />
-              </button>
+              </motion.button>
             </a>
           </div>
 
-          <section className="mb-16 space-y-10 text-center text-lg leading-relaxed">
-            <h2 className="text-3xl font-semibold">About me</h2>
-            <p className="text-xl">📍 Based in Paris, France</p>
+          <section className="mb-12 space-y-8 text-center text-base leading-relaxed">
+            <AnimatedElement as="p" delay={0.3} className="text-sm">
+              📍 Based in Paris, France
+            </AnimatedElement>
 
-            <div className="flex cursor-pointer flex-col space-y-2">
-              <p className="text-xl">M.S. in Electronic Engineering and Computer Science</p>
-              <div className="text-lg">
+            <div className="flex flex-col space-y-8">
+              <AnimatedElement
+                as="h3"
+                delay={0.4}
+                className="font-['Schibsted_Grotesk'] text-lg font-semibold"
+              >
+                Education
+              </AnimatedElement>
+              <AnimatedElement as="p" delay={0.5} className="text-sm">
+                M.S. in Electronic Engineering and Computer Science
+                <br />
                 <a
                   href="https://www.isep.fr/"
                   className="hover:text-blue-600 dark:hover:text-blue-400"
                 >
-                  ISEP Paris 🇫🇷
+                  ISEP Paris
                 </a>{' '}
                 and{' '}
                 <a
                   href="https://www.berkeley.edu/"
                   className="hover:text-blue-600 dark:hover:text-blue-400"
                 >
-                  University of California, Berkeley 🇺🇸
+                  University of California, Berkeley
                 </a>
-              </div>
+              </AnimatedElement>
             </div>
 
-            <div className="flex cursor-pointer flex-col space-y-2">
-              <p className="text-xl">Software Engineer</p>
-              <div className="text-lg">
+            <div className="flex flex-col space-y-8">
+              <AnimatedElement
+                as="h3"
+                delay={0.7}
+                className="font-['Schibsted_Grotesk'] text-lg font-semibold"
+              >
+                Software Engineer
+              </AnimatedElement>
+              <AnimatedElement
+                as="div"
+                delay={0.8}
+                className="text-sm text-neutral-600 dark:text-neutral-400"
+              >
                 <a
                   href="https://mistral.ai/"
-                  className="hover:text-blue-600 dark:hover:text-blue-400"
+                  className="text-neutral-800 hover:text-blue-600 dark:text-neutral-200 dark:hover:text-blue-400"
                 >
                   Mistral AI
                 </a>{' '}
@@ -106,20 +118,30 @@ export default function Home() {
                 <br />
                 <a
                   href="https://rockfi.fr/"
-                  className="hover:text-blue-600 dark:hover:text-blue-400"
+                  className="text-neutral-800 hover:text-blue-600 dark:text-neutral-200 dark:hover:text-blue-400"
                 >
                   RockFi
                 </a>{' '}
                 – Private wealth management startup
-              </div>
+              </AnimatedElement>
             </div>
 
-            <div className="flex cursor-pointer flex-col space-y-2">
-              <p className="text-xl">Software Engineer Internships</p>
-              <div className="text-lg">
+            <div className="flex flex-col space-y-8">
+              <AnimatedElement
+                as="h3"
+                delay={0.9}
+                className="font-['Schibsted_Grotesk'] text-lg font-semibold"
+              >
+                Software Engineer Internships
+              </AnimatedElement>
+              <AnimatedElement
+                as="div"
+                delay={1.0}
+                className="text-sm text-neutral-600 dark:text-neutral-400"
+              >
                 <a
                   href="https://qonto.com/en"
-                  className="hover:text-blue-600 dark:hover:text-blue-400"
+                  className="text-neutral-800 hover:text-blue-600 dark:text-neutral-200 dark:hover:text-blue-400"
                 >
                   Qonto
                 </a>{' '}
@@ -127,7 +149,7 @@ export default function Home() {
                 <br />
                 <a
                   href="https://www.ledger.com/"
-                  className="hover:text-blue-600 dark:hover:text-blue-400"
+                  className="text-neutral-800 hover:text-blue-600 dark:text-neutral-200 dark:hover:text-blue-400"
                 >
                   Ledger
                 </a>{' '}
@@ -135,23 +157,33 @@ export default function Home() {
                 <br />
                 <a
                   href="https://www.idemia.com/"
-                  className="hover:text-blue-600 dark:hover:text-blue-400"
+                  className="text-neutral-800 hover:text-blue-600 dark:text-neutral-200 dark:hover:text-blue-400"
                 >
                   Idemia
                 </a>{' '}
                 – Leader in identity technologies
-              </div>
+              </AnimatedElement>
             </div>
 
-            <p className="mx-auto max-w-2xl text-xl">
+            <AnimatedElement as="p" delay={1.1} className="mx-auto max-w-2xl text-sm">
               Mainly interested in searching for new ways to compress knowledge and make it
               transferable.
-            </p>
+            </AnimatedElement>
           </section>
 
-          <section className="mb-16 space-y-8">
-            <h2 className="mb-8 text-center text-3xl font-semibold">Some of my silly projects</h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <section className="mb-12 space-y-6">
+            <AnimatedElement
+              as="h2"
+              delay={1.2}
+              className="mb-6 text-center font-['Schibsted_Grotesk'] text-2xl font-semibold"
+            >
+              Some of my silly projects
+            </AnimatedElement>
+            <AnimatedElement
+              as="div"
+              delay={1.3}
+              className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+            >
               <Card
                 title="Qonto Customer Support Chatbot"
                 description="RAG chatbot to help Qonto customers with their questions. Handles 50%+ of customer conversations autonomously and reduced time to solve user issues by 44% for 500k customers."
@@ -243,42 +275,7 @@ export default function Home() {
                 backendStack="JavaScript, GPT3.5 API"
                 frontendStack="Discord hahaha"
               ></Card>
-            </div>
-          </section>
-
-          <section className="mb-16 space-y-6 text-center text-lg leading-relaxed">
-            <h2 className="mb-8 text-3xl font-semibold">A little more about me</h2>
-
-            <p className="mx-auto max-w-2xl">
-              22 years old, I love running and Korean food 🇰🇷.
-              <br />
-              Visited Seoul last May. This city is fantastic 😍.
-              <br />
-              Still wondering what my next trip will be 🤔.
-            </p>
-
-            <p className="mx-auto max-w-2xl">
-              My favorite books are probably The Hobbit, 1984 and Atomic Habits.
-            </p>
-
-            <p className="mx-auto max-w-2xl">
-              A big fan of The Office.
-              <br />
-              Watching some of the most popular KDramas to stay up to date with my friends!
-              <br />I really liked The Glory, Doona and King The Land.
-            </p>
-
-            <p className="mx-auto max-w-2xl">
-              Finished Hades and Cyberpunk 2077 in solo and relax by playing Minecraft and Valorant
-              with my friends.
-            </p>
-          </section>
-
-          <section className="mb-8 text-center">
-            <h2 className="mb-8 text-3xl font-semibold">Chat with me</h2>
-            <button className="cursor-not-allowed rounded-lg bg-neutral-500 px-6 py-3 text-lg text-white opacity-50">
-              (Coming soon...)
-            </button>
+            </AnimatedElement>
           </section>
         </div>
       </main>
