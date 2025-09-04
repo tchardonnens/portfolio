@@ -185,7 +185,7 @@ export default function Home() {
             >
               <Card
                 title="Mistral AI MCP for Le Chat"
-                description="Bring the widest enterprise-ready MCP connectors directory to Le Chat, with custom extensibility."
+                description="Bring the widest enterprise-ready MCP connectors directory (+20 connectors) to Le Chat, with custom extensibility to bring your own connectors."
                 linkProd="https://mistral.ai/news/le-chat-mcp-connectors-memories"
                 backendStack="MCP"
                 frontendStack="Le Chat"
