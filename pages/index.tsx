@@ -1,11 +1,9 @@
-import { FaXTwitter } from 'react-icons/fa6';
-import { FaLinkedinIn } from 'react-icons/fa6';
-import { FaGithub } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
-import Card from '../components/card';
 import Image from 'next/image';
-import CustomHead from '../components/head';
+import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import AnimatedElement from '../components/animated-element';
+import Card from '../components/card';
+import CustomHead from '../components/head';
 
 export default function Home() {
   return (
@@ -185,6 +183,14 @@ export default function Home() {
               delay={1.3}
               className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
             >
+              <Card
+                title="Mistral AI MCP for Le Chat"
+                description="Bring the widest enterprise-ready MCP connectors directory to Le Chat, with custom extensibility."
+                linkProd="https://mistral.ai/news/le-chat-mcp-connectors-memories"
+                backendStack="MCP"
+                frontendStack="Le Chat"
+              ></Card>
+
               <Card
                 title="Qonto Customer Support Chatbot"
                 description="RAG chatbot to help Qonto customers with their questions. Handles 50%+ of customer conversations autonomously and reduced time to solve user issues by 44% for 500k customers."
