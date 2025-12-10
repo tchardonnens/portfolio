@@ -1,15 +1,44 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
+import { useEffect, useState } from 'react';
 import AnimatedElement from '../components/animated-element';
 import Card from '../components/card';
 import CustomHead from '../components/head';
 
 export default function Home() {
+  const [snowflakes, setSnowflakes] = useState<JSX.Element[]>([]);
+  const [isChristmasTheme, setIsChristmasTheme] = useState(true);
+
+  useEffect(() => {
+    // Create snowflakes
+    const flakes = [];
+    for (let i = 0; i < 50; i++) {
+      const style = {
+        left: `${Math.random() * 100}%`,
+        animationDuration: `${Math.random() * 3 + 2}s`,
+        animationDelay: `${Math.random() * 5}s`,
+        fontSize: `${Math.random() * 10 + 10}px`,
+      };
+      flakes.push(
+        <div key={`snowflake-${i}`} className="xmas-snowflake" style={style}>
+          ❄
+        </div>
+      );
+    }
+    setSnowflakes(flakes);
+  }, []);
+
   return (
     <>
       <CustomHead />
-      <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center bg-neutral-50 px-4 pb-8 pt-8 font-['JetBrains_Mono'] text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
+      <div className={`xmas-theme ${isChristmasTheme ? '' : 'hidden'}`}>
+        <div className="xmas-snowflakes">
+          {snowflakes}
+        </div>
+        <div className="xmas-tree"></div>
+      </div>
+      <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center bg-neutral-50 px-4 pb-8 pt-8 font-['JetBrains_Mono'] text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200 relative">
         <div className="w-full">
           <div className="mb-6 flex flex-row items-center justify-center">
             <Image
@@ -22,7 +51,7 @@ export default function Home() {
           </div>
           <AnimatedElement
             as="h1"
-            className="font-base mb-6 text-center font-['Schibsted_Grotesk'] text-3xl"
+            className="font-base mb-6 text-center font-['Mountains_of_Christmas'] text-3xl"
           >
             Thomas Chardonnens
           </AnimatedElement>
@@ -162,19 +191,13 @@ export default function Home() {
                 – Leader in identity technologies
               </AnimatedElement>
             </div>
-
-            <AnimatedElement as="p" delay={1.1} className="mx-auto max-w-2xl text-sm ">
-              Mainly interested in searching for new ways
-              <br />
-              to compress knowledge and make it transferable.
-            </AnimatedElement>
           </section>
 
           <section className="mb-12 space-y-6">
             <AnimatedElement
               as="h2"
               delay={1.2}
-              className="mb-6 text-center font-['Schibsted_Grotesk'] text-2xl font-semibold"
+              className="mb-6 text-center font-['Mountains_of_Christmas'] text-2xl font-semibold"
             >
               Some of my silly projects
             </AnimatedElement>
