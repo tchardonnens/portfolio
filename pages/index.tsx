@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
 import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import AnimatedElement from '../components/animated-element';
 import Card from '../components/card';
@@ -168,15 +167,6 @@ export default function Home() {
               Mainly interested in searching for new ways
               <br />
               to compress knowledge and make it transferable.
-            </AnimatedElement>
-
-            <AnimatedElement as="p" delay={1.15} className="text-sm">
-              <Link
-                href="/about-me"
-                className="underline underline-offset-4 hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                More about me
-              </Link>
             </AnimatedElement>
           </section>
 
