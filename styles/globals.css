@@ -24,3 +24,52 @@ body {
 .dark {
   background-color: #101010;
 }
+
+/* --- /journey flight board ------------------------------------------------ */
+
+/* Each cell flips down into place, like a split-flap display. */
+@keyframes journey-flap-in {
+  0% {
+    transform: rotateX(-92deg);
+    opacity: 0;
+  }
+  55% {
+    transform: rotateX(10deg);
+    opacity: 1;
+  }
+  78% {
+    transform: rotateX(-5deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+.journey-flap {
+  display: inline-block;
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+  animation: journey-flap-in 0.42s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+  animation-delay: var(--flap-delay, 0s);
+}
+
+@keyframes journey-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.journey-ticker {
+  animation: journey-ticker 42s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-flap,
+  .journey-ticker {
+    animation: none;
+  }
+}
