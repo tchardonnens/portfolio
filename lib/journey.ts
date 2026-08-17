@@ -22,6 +22,8 @@ export type Trip = {
   /** Airport code, shown in the Flight column of Arrivals. */
   iata: string;
   continent: Continent;
+  /** [longitude, latitude] — where the globe puts the marker. */
+  geo: [number, number];
   /** YYYY-MM-DD. Drives sorting and which board the row lands on. */
   startDate: string;
   /** YYYY-MM-DD. Omit for a single day or an open-ended stay. */
@@ -60,6 +62,7 @@ export const TRIPS: Trip[] = [
     country: 'France',
     iata: 'CDG',
     continent: 'Europe',
+    geo: [2.35, 48.86],
     startDate: `${JOURNEY_SINCE}-09-01`, // adjust to when you actually landed here
     status: 'resident',
     region: 'France · Home',
@@ -71,6 +74,7 @@ export const TRIPS: Trip[] = [
     country: 'United States',
     iata: 'SFO',
     continent: 'North America',
+    geo: [-122.27, 37.87],
     startDate: '2023-08-14',
     endDate: '2023-12-15',
     status: 'lived',
@@ -84,6 +88,7 @@ export const TRIPS: Trip[] = [
     country: 'South Korea',
     iata: 'ICN',
     continent: 'Asia',
+    geo: [126.98, 37.57],
     startDate: '2024-05-04', // check the real dates
     endDate: '2024-05-18',
     region: 'South Korea',
@@ -97,6 +102,7 @@ export const TRIPS: Trip[] = [
     country: 'Portugal',
     iata: 'LIS',
     continent: 'Europe',
+    geo: [-9.14, 38.72],
     startDate: '2022-04-08',
     endDate: '2022-04-13',
     region: 'Portugal',
@@ -107,6 +113,7 @@ export const TRIPS: Trip[] = [
     country: 'Italy',
     iata: 'FCO',
     continent: 'Europe',
+    geo: [12.5, 41.9],
     startDate: '2023-03-02',
     endDate: '2023-03-06',
     region: 'Italy',
@@ -117,6 +124,7 @@ export const TRIPS: Trip[] = [
     country: 'Japan',
     iata: 'HND',
     continent: 'Asia',
+    geo: [139.69, 35.69],
     startDate: '2025-04-11',
     endDate: '2025-04-24',
     region: 'Japan',
@@ -127,6 +135,7 @@ export const TRIPS: Trip[] = [
     country: 'Morocco',
     iata: 'RAK',
     continent: 'Africa',
+    geo: [-7.98, 31.63],
     startDate: '2025-11-06',
     endDate: '2025-11-10',
     region: 'Morocco',
@@ -137,6 +146,7 @@ export const TRIPS: Trip[] = [
     country: 'Portugal',
     iata: 'OPO',
     continent: 'Europe',
+    geo: [-8.61, 41.15],
     startDate: '2026-10-09',
     endDate: '2026-10-13',
     region: 'Portugal · Long weekend',
@@ -148,6 +158,7 @@ export const TRIPS: Trip[] = [
     country: 'South Korea',
     iata: 'ICN',
     continent: 'Asia',
+    geo: [126.98, 37.57],
     startDate: '2026-12-19',
     endDate: '2027-01-03',
     region: 'South Korea · Round two',
@@ -221,6 +232,21 @@ export const formatHeaderDate = (iso: string): string => {
 };
 
 const flightNumber = (trip: Trip): string => `TC ${trip.startDate.slice(5).replace('-', '')}`;
+
+const EARTH_RADIUS_KM = 6371;
+
+/** Great-circle distance between two [lon, lat] pairs, in kilometres. */
+export const distanceKm = (from: [number, number], to: [number, number]): number => {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const [lon1, lat1] = from;
+  const [lon2, lat2] = to;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return Math.round(2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(a)));
+};
 
 const phaseOf = (trip: Trip, todayISO: string): Phase => {
   if (trip.status === 'resident') return 'resident';

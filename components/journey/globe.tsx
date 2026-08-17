@@ -1,0 +1,417 @@
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { landDots } from '../../lib/land-dots';
+
+export type GlobePoint = { id: string; geo: [number, number] };
+
+type Props = {
+  /** Every place on the board, drawn as a marker. */
+  points: GlobePoint[];
+  /** Where flights leave from — the origin of every arc. */
+  homeGeo: [number, number];
+  /** The hovered row's destination. Null spins the globe idly. */
+  focusGeo: [number, number] | null;
+  className?: string;
+};
+
+const RADIUS = 1;
+const IDLE_SPIN = 0.055; // radians per second
+
+/** Lon/lat in degrees to a point on the sphere, with lon 0 / lat 0 facing the camera. */
+function toVector(lon: number, lat: number, radius = RADIUS): THREE.Vector3 {
+  const phi = THREE.MathUtils.degToRad(lat);
+  const theta = THREE.MathUtils.degToRad(lon);
+  return new THREE.Vector3(
+    radius * Math.cos(phi) * Math.sin(theta),
+    radius * Math.sin(phi),
+    radius * Math.cos(phi) * Math.cos(theta)
+  );
+}
+
+/**
+ * A great-circle path between two points, lifted off the surface. Longer
+ * flights arch higher, the way route maps draw them.
+ */
+function arcCurve(from: THREE.Vector3, to: THREE.Vector3): THREE.CatmullRomCurve3 {
+  const angle = from.angleTo(to);
+  const lift = 0.12 + (angle / Math.PI) * 0.34;
+  const points: THREE.Vector3[] = [];
+  for (let i = 0; i <= 64; i += 1) {
+    const t = i / 64;
+    const point = from.clone().lerp(to, t).normalize();
+    point.multiplyScalar(RADIUS + Math.sin(Math.PI * t) * lift);
+    points.push(point);
+  }
+  return new THREE.CatmullRomCurve3(points);
+}
+
+const THEMES = {
+  light: { land: 0x9a9a9a, sphere: 0xfafafa, accent: 0xf97316, glow: 0xf97316, landOpacity: 0.9 },
+  dark: { land: 0x6e6e6e, sphere: 0x0a0a0a, accent: 0xf97316, glow: 0xf97316, landOpacity: 1 },
+};
+
+const DOT_VERTEX = `
+  uniform float uSize;
+  uniform float uPixelRatio;
+  uniform float uScale;
+  uniform float uCameraZ;
+  varying float vFade;
+  void main() {
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mv;
+    // uSize is in CSS pixels at the reference canvas size; uScale keeps the dots
+    // proportional when the panel resizes, and the depth term adds a little
+    // perspective so the near face reads as closer.
+    gl_PointSize = uSize * uPixelRatio * uScale * (uCameraZ / -mv.z);
+    // Fade toward the limb so the cloud reads as a curved surface.
+    vec3 n = normalize(mat3(modelViewMatrix) * position);
+    vFade = smoothstep(-0.12, 0.4, n.z);
+  }
+`;
+
+const DOT_FRAGMENT = `
+  uniform vec3 uColor;
+  uniform float uOpacity;
+  varying float vFade;
+  void main() {
+    if (length(gl_PointCoord - 0.5) > 0.5) discard;
+    gl_FragColor = vec4(uColor, uOpacity * vFade);
+  }
+`;
+
+const ATMOSPHERE_VERTEX = `
+  varying vec3 vNormal;
+  void main() {
+    vNormal = normalize(normalMatrix * normal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const ATMOSPHERE_FRAGMENT = `
+  uniform vec3 uColor;
+  uniform float uStrength;
+  varying vec3 vNormal;
+  void main() {
+    // Only the band between the globe's limb and this shell's silhouette is
+    // visible, and across it the facing term runs ~0.42 down to 0. Normalising
+    // by that puts the glow hard against the limb and fades it outward, rather
+    // than lighting up the outer edge.
+    float facing = abs(dot(vNormal, vec3(0.0, 0.0, 1.0)));
+    float rim = pow(clamp(facing / 0.42, 0.0, 1.0), 1.6);
+    gl_FragColor = vec4(uColor, rim * uStrength);
+  }
+`;
+
+/** Progress-gated arc: uv.x runs along the tube, so we reveal it end to end. */
+const ARC_FRAGMENT = `
+  uniform vec3 uColor;
+  uniform float uProgress;
+  varying vec2 vUv;
+  void main() {
+    if (vUv.x > uProgress) discard;
+    // Brighten the leading edge so the arc reads as being drawn, not switched on.
+    float head = smoothstep(uProgress - 0.08, uProgress, vUv.x);
+    gl_FragColor = vec4(uColor, 0.35 + head * 0.65);
+  }
+`;
+
+const ARC_VERTEX = `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+export default function Globe({ points, homeGeo, focusGeo, className = '' }: Props) {
+  const mountRef = useRef<HTMLDivElement>(null);
+  // The render loop reads these through refs so prop changes never rebuild the scene.
+  const focusRef = useRef(focusGeo);
+  const pointsRef = useRef(points);
+  focusRef.current = focusGeo;
+  pointsRef.current = points;
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount) return;
+
+    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    mount.appendChild(renderer.domElement);
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.display = 'block';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+    camera.position.z = 3.6;
+
+    const world = new THREE.Group();
+    // Tilt the axis so the globe never looks like a flat spinning disc.
+    world.rotation.z = THREE.MathUtils.degToRad(-14);
+    scene.add(world);
+
+    const spin = new THREE.Group();
+    world.add(spin);
+
+    const theme = () => (darkQuery.matches ? THEMES.dark : THEMES.light);
+
+    // --- the body, which occludes everything on the far side -----------------
+    const bodyMaterial = new THREE.MeshBasicMaterial({ color: theme().sphere });
+    const body = new THREE.Mesh(new THREE.SphereGeometry(RADIUS * 0.985, 48, 48), bodyMaterial);
+    spin.add(body);
+
+    const gridMaterial = new THREE.LineBasicMaterial({
+      color: theme().land,
+      transparent: true,
+      opacity: 0.12,
+    });
+    const grid = new THREE.LineSegments(
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(RADIUS * 0.99, 18, 12)),
+      gridMaterial
+    );
+    spin.add(grid);
+
+    // --- land ----------------------------------------------------------------
+    const flat = landDots();
+    const landPositions = new Float32Array((flat.length / 2) * 3);
+    for (let i = 0; i < flat.length / 2; i += 1) {
+      const v = toVector(flat[i * 2], flat[i * 2 + 1]);
+      landPositions.set([v.x, v.y, v.z], i * 3);
+    }
+    const landGeometry = new THREE.BufferGeometry();
+    landGeometry.setAttribute('position', new THREE.BufferAttribute(landPositions, 3));
+    const landMaterial = new THREE.ShaderMaterial({
+      vertexShader: DOT_VERTEX,
+      fragmentShader: DOT_FRAGMENT,
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        uSize: { value: 2.1 },
+        uPixelRatio: { value: renderer.getPixelRatio() },
+        uScale: { value: 1 },
+        uCameraZ: { value: camera.position.z },
+        uColor: { value: new THREE.Color(theme().land) },
+        uOpacity: { value: theme().landOpacity },
+      },
+    });
+    spin.add(new THREE.Points(landGeometry, landMaterial));
+
+    // --- city markers --------------------------------------------------------
+    const markerPositions = new Float32Array(pointsRef.current.length * 3);
+    pointsRef.current.forEach((point, i) => {
+      const v = toVector(point.geo[0], point.geo[1], RADIUS * 1.005);
+      markerPositions.set([v.x, v.y, v.z], i * 3);
+    });
+    const markerGeometry = new THREE.BufferGeometry();
+    markerGeometry.setAttribute('position', new THREE.BufferAttribute(markerPositions, 3));
+    const markerMaterial = new THREE.ShaderMaterial({
+      vertexShader: DOT_VERTEX,
+      fragmentShader: DOT_FRAGMENT,
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        uSize: { value: 5.5 },
+        uPixelRatio: { value: renderer.getPixelRatio() },
+        uScale: { value: 1 },
+        uCameraZ: { value: camera.position.z },
+        uColor: { value: new THREE.Color(theme().accent) },
+        uOpacity: { value: 0.95 },
+      },
+    });
+    spin.add(new THREE.Points(markerGeometry, markerMaterial));
+
+    // --- atmosphere ----------------------------------------------------------
+    const atmosphereMaterial = new THREE.ShaderMaterial({
+      vertexShader: ATMOSPHERE_VERTEX,
+      fragmentShader: ATMOSPHERE_FRAGMENT,
+      transparent: true,
+      side: THREE.BackSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      uniforms: {
+        uColor: { value: new THREE.Color(theme().glow) },
+        uStrength: { value: darkQuery.matches ? 0.5 : 0.28 },
+      },
+    });
+    world.add(new THREE.Mesh(new THREE.SphereGeometry(RADIUS * 1.1, 48, 48), atmosphereMaterial));
+
+    // --- the flight arc, rebuilt whenever the focus changes ------------------
+    const arcMaterial = new THREE.ShaderMaterial({
+      vertexShader: ARC_VERTEX,
+      fragmentShader: ARC_FRAGMENT,
+      transparent: true,
+      depthWrite: false,
+      uniforms: { uColor: { value: new THREE.Color(theme().accent) }, uProgress: { value: 0 } },
+    });
+    let arcMesh: THREE.Mesh | null = null;
+    let arcCurrent: THREE.CatmullRomCurve3 | null = null;
+
+    const travellerMaterial = new THREE.MeshBasicMaterial({ color: theme().accent });
+    const traveller = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 12), travellerMaterial);
+    traveller.visible = false;
+    spin.add(traveller);
+
+    const home = toVector(homeGeo[0], homeGeo[1]);
+
+    const clearArc = () => {
+      if (!arcMesh) return;
+      spin.remove(arcMesh);
+      arcMesh.geometry.dispose();
+      arcMesh = null;
+      arcCurrent = null;
+      traveller.visible = false;
+    };
+
+    const buildArc = (geo: [number, number]) => {
+      clearArc();
+      arcCurrent = arcCurve(home, toVector(geo[0], geo[1]));
+      arcMesh = new THREE.Mesh(
+        new THREE.TubeGeometry(arcCurrent, 120, 0.008, 8, false),
+        arcMaterial
+      );
+      spin.add(arcMesh);
+      arcMaterial.uniforms.uProgress.value = 0;
+    };
+
+    // --- rotation ------------------------------------------------------------
+    // Bringing (lon, lat) to face the camera means yawing by -lon and pitching
+    // by +lat. Tracked as continuous angles so we always take the short way round.
+    const target = new THREE.Vector2(0, 0);
+    const current = new THREE.Vector2(0, 0);
+    let idleYaw = 0;
+    let lastFocusKey = '';
+
+    const setTarget = (geo: [number, number] | null) => {
+      if (!geo) return;
+      const wantY = THREE.MathUtils.degToRad(-geo[0]);
+      const wantX = THREE.MathUtils.degToRad(geo[1]);
+      // Unwrap toward the nearest equivalent angle.
+      const twoPi = Math.PI * 2;
+      target.y = wantY + Math.round((current.y - wantY) / twoPi) * twoPi;
+      target.x = THREE.MathUtils.clamp(wantX, -Math.PI / 3, Math.PI / 3);
+    };
+
+    const applyTheme = () => {
+      const t = theme();
+      bodyMaterial.color.set(t.sphere);
+      gridMaterial.color.set(t.land);
+      landMaterial.uniforms.uColor.value.set(t.land);
+      landMaterial.uniforms.uOpacity.value = t.landOpacity;
+      markerMaterial.uniforms.uColor.value.set(t.accent);
+      atmosphereMaterial.uniforms.uColor.value.set(t.glow);
+      atmosphereMaterial.uniforms.uStrength.value = darkQuery.matches ? 0.5 : 0.28;
+      arcMaterial.uniforms.uColor.value.set(t.accent);
+      travellerMaterial.color.set(t.accent);
+    };
+
+    const resize = () => {
+      const { clientWidth, clientHeight } = mount;
+      if (!clientWidth || !clientHeight) return;
+      renderer.setSize(clientWidth, clientHeight, false);
+      camera.aspect = clientWidth / clientHeight;
+      camera.updateProjectionMatrix();
+      const scale = clientHeight / 360;
+      [landMaterial, markerMaterial].forEach((material) => {
+        material.uniforms.uPixelRatio.value = renderer.getPixelRatio();
+        material.uniforms.uScale.value = scale;
+      });
+    };
+    resize();
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(mount);
+
+    // Don't burn a frame budget on a globe nobody is looking at.
+    let onScreen = true;
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    intersectionObserver.observe(mount);
+
+    let frame = 0;
+    let last = performance.now();
+
+    const tick = (now: number) => {
+      frame = requestAnimationFrame(tick);
+      const delta = Math.min((now - last) / 1000, 0.1);
+      last = now;
+      if (!onScreen || document.hidden) return;
+
+      const focus = focusRef.current;
+      const key = focus ? `${focus[0]},${focus[1]}` : '';
+      if (key !== lastFocusKey) {
+        lastFocusKey = key;
+        if (focus) {
+          setTarget(focus);
+          buildArc(focus);
+        } else {
+          clearArc();
+        }
+      }
+
+      if (focus) {
+        // Ease toward the destination, then draw the flight along the arc.
+        const ease = motionQuery.matches ? 1 : 1 - Math.pow(0.0016, delta);
+        current.lerp(target, ease);
+        idleYaw = current.y;
+        const progress = arcMaterial.uniforms.uProgress.value as number;
+        arcMaterial.uniforms.uProgress.value = motionQuery.matches
+          ? 1
+          : Math.min(1, progress + delta * 0.9);
+        if (arcCurrent) {
+          const at = arcMaterial.uniforms.uProgress.value as number;
+          traveller.visible = at > 0.02 && at < 0.999;
+          arcCurrent.getPointAt(Math.min(at, 1), traveller.position);
+        }
+      } else {
+        if (!motionQuery.matches) idleYaw += delta * IDLE_SPIN;
+        current.y = idleYaw;
+        current.x += (0.16 - current.x) * (1 - Math.pow(0.002, delta));
+        target.set(current.x, current.y);
+      }
+
+      spin.rotation.y = current.y;
+      spin.rotation.x = current.x;
+      renderer.render(scene, camera);
+    };
+    frame = requestAnimationFrame(tick);
+
+    darkQuery.addEventListener('change', applyTheme);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+      darkQuery.removeEventListener('change', applyTheme);
+      clearArc();
+      scene.traverse((object) => {
+        if (object instanceof THREE.Mesh || object instanceof THREE.Points) {
+          object.geometry.dispose();
+        }
+        if (object instanceof THREE.LineSegments) object.geometry.dispose();
+      });
+      [
+        bodyMaterial,
+        gridMaterial,
+        landMaterial,
+        markerMaterial,
+        atmosphereMaterial,
+        arcMaterial,
+        travellerMaterial,
+      ].forEach((material) => material.dispose());
+      renderer.dispose();
+      renderer.domElement.remove();
+    };
+    // The scene is built once; live values are read through refs inside the loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [homeGeo]);
+
+  return <div ref={mountRef} aria-hidden="true" className={className} />;
+}

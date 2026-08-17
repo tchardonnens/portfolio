@@ -49,7 +49,15 @@ function Flap({
   );
 }
 
-function Row({ row, index }: { row: Extract<BoardRow, { cells: BoardCell[] }>; index: number }) {
+function Row({
+  row,
+  index,
+  onFocusRow,
+}: {
+  row: Extract<BoardRow, { cells: BoardCell[] }>;
+  index: number;
+  onFocusRow?: (key: string | null) => void;
+}) {
   const content = row.cells.map((cell, column) => {
     // Stagger down the rows and across the columns, so the board fills in the
     // way a real one does rather than all at once.
@@ -83,6 +91,15 @@ function Row({ row, index }: { row: Extract<BoardRow, { cells: BoardCell[] }>; i
       : 'hover:bg-neutral-100 dark:hover:bg-neutral-900',
   ].join(' ');
 
+  // Pointing at a row flies the globe to that destination; leaving lets it idle
+  // again. Focus mirrors hover so the globe follows keyboard navigation too.
+  const handlers = onFocusRow && {
+    onMouseEnter: () => onFocusRow(row.key),
+    onMouseLeave: () => onFocusRow(null),
+    onFocus: () => onFocusRow(row.key),
+    onBlur: () => onFocusRow(null),
+  };
+
   if (row.href) {
     return (
       <a
@@ -90,13 +107,18 @@ function Row({ row, index }: { row: Extract<BoardRow, { cells: BoardCell[] }>; i
         href={row.href}
         target="_blank"
         rel="noopener noreferrer"
+        {...handlers}
       >
         {content}
       </a>
     );
   }
 
-  return <div className={className}>{content}</div>;
+  return (
+    <div className={className} tabIndex={onFocusRow ? 0 : undefined} {...handlers}>
+      {content}
+    </div>
+  );
 }
 
 export default function FlightBoard({
@@ -105,12 +127,15 @@ export default function FlightBoard({
   rows,
   ariaLabel,
   emptyLabel = 'Nothing scheduled',
+  onFocusRow,
 }: {
   title: string;
   columns: BoardColumn[];
   rows: BoardRow[];
   ariaLabel: string;
   emptyLabel?: string;
+  /** Fires with a row key on hover or focus, and null when it is released. */
+  onFocusRow?: (key: string | null) => void;
 }) {
   const body: BoardRow[] = rows.length
     ? rows
@@ -163,7 +188,7 @@ export default function FlightBoard({
             );
           }
           dataRowIndex += 1;
-          return <Row key={row.key} row={row} index={dataRowIndex} />;
+          return <Row key={row.key} row={row} index={dataRowIndex} onFocusRow={onFocusRow} />;
         })}
       </div>
     </section>

@@ -1,7 +1,9 @@
 import type { GetStaticProps } from 'next';
+import { useState } from 'react';
 import CustomHead from '../../components/head';
 import FlightBoard, { BoardColumn, BoardRow } from '../../components/journey/flight-board';
 import GatePanel from '../../components/journey/gate-panel';
+import GlobePanel from '../../components/journey/globe-panel';
 import TerminalHeader from '../../components/journey/terminal-header';
 import {
   DerivedTrip,
@@ -112,7 +114,8 @@ function SectionTitle({ title, tag }: { title: string; tag: string }) {
 
 export default function Journey({ todayISO }: Props) {
   const boards = buildBoards(todayISO);
-  const { departures, arrivalsByYear, home, nextUp } = boards;
+  const { departures, arrivals, arrivalsByYear, home, nextUp } = boards;
+  const [focusId, setFocusId] = useState<string | null>(null);
 
   const arrivalRows: BoardRow[] = [];
   if (home) arrivalRows.push(toArrivalRow(home));
@@ -121,43 +124,59 @@ export default function Journey({ todayISO }: Props) {
     for (const trip of group.trips) arrivalRows.push(toArrivalRow(trip));
   }
 
+  const everywhere = [...departures, ...arrivals];
+  const focused = everywhere.find((trip) => trip.id === focusId) ?? null;
+
   return (
     <>
       <CustomHead
         title="Journey - Thomas Chardonnens"
         description="A departures and arrivals board of everywhere I have been, and where I am headed next."
       />
-      <main className="mx-auto flex min-h-screen max-w-5xl flex-col bg-neutral-50 px-4 pb-20 pt-8 font-['JetBrains_Mono'] text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
+      <main className="mx-auto flex min-h-screen max-w-6xl flex-col bg-neutral-50 px-4 pb-20 pt-8 font-['JetBrains_Mono'] text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
         <TerminalHeader boards={boards} todayISO={todayISO} />
 
-        <section className="mt-14">
-          <SectionTitle title="Departures" tag="Where I am headed" />
-          <FlightBoard
-            title={`${HOME_CODE} · ${HOME_NAME}`}
-            columns={DEPARTURE_COLUMNS}
-            rows={departures.map(toDepartureRow)}
-            ariaLabel="Departures board"
-            emptyLabel="No departures scheduled"
-          />
-        </section>
+        <div className="mt-14 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
+          <div className="flex flex-col gap-14">
+            <section>
+              <SectionTitle title="Departures" tag="Where I am headed" />
+              <FlightBoard
+                title={`${HOME_CODE} · ${HOME_NAME}`}
+                columns={DEPARTURE_COLUMNS}
+                rows={departures.map(toDepartureRow)}
+                ariaLabel="Departures board"
+                emptyLabel="No departures scheduled"
+                onFocusRow={setFocusId}
+              />
+            </section>
 
-        {nextUp && (
-          <section className="mt-14">
-            <SectionTitle title="Now Boarding" tag="Gate detail" />
-            <GatePanel trip={nextUp} />
-          </section>
-        )}
+            {nextUp && (
+              <section>
+                <SectionTitle title="Now Boarding" tag="Gate detail" />
+                <GatePanel trip={nextUp} />
+              </section>
+            )}
 
-        <section className="mt-14">
-          <SectionTitle title="Arrivals" tag="Everywhere I have landed" />
-          <FlightBoard
-            title={`${HOME_CODE} · ${HOME_NAME}`}
-            columns={ARRIVAL_COLUMNS}
-            rows={arrivalRows}
-            ariaLabel="Arrivals board"
-            emptyLabel="No arrivals logged"
-          />
-        </section>
+            <section>
+              <SectionTitle title="Arrivals" tag="Everywhere I have landed" />
+              <FlightBoard
+                title={`${HOME_CODE} · ${HOME_NAME}`}
+                columns={ARRIVAL_COLUMNS}
+                rows={arrivalRows}
+                ariaLabel="Arrivals board"
+                emptyLabel="No arrivals logged"
+                onFocusRow={setFocusId}
+              />
+            </section>
+          </div>
+
+          {/* Sticky, so the globe stays in view while you run down the boards. */}
+          {home && (
+            <div className="order-first lg:sticky lg:top-8 lg:order-none">
+              <GlobePanel trips={everywhere} home={home} focused={focused} />
+            </div>
+          )}
+        </div>
       </main>
     </>
   );
