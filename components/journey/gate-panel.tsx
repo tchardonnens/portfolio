@@ -1,8 +1,10 @@
-import { DerivedTrip, HOME_CODE, formatRange } from '../../lib/journey';
+import { DerivedTrip, HOME_CODE, formatRange, formatStart, precisionOf } from '../../lib/journey';
 
 const countdown = (trip: DerivedTrip): string => {
   if (trip.phase === 'enroute') return 'In the air';
   if (trip.phase === 'boarding') return 'Boarding today';
+  // Counting down to the day needs a date that is known to the day.
+  if (precisionOf(trip) !== 'day') return `Departs ${formatStart(trip)}`;
   if (trip.daysAway === 1) return 'Departs tomorrow';
   return `Departs in ${trip.daysAway} days`;
 };
