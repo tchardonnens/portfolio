@@ -7,6 +7,9 @@ export type GlobePoint = { id: string; geo: [number, number] };
 /** The hovered destination, plus any waypoints its route is routed through. */
 export type GlobeFocus = { geo: [number, number]; via?: [number, number][] };
 
+/** A marker under the pointer, with where it sits on screen in CSS pixels. */
+export type GlobeHit = { id: string; x: number; y: number };
+
 type Props = {
   /** Every place on the board, drawn as a marker. */
   points: GlobePoint[];
@@ -14,11 +17,19 @@ type Props = {
   homeGeo: [number, number];
   /** The hovered row's destination. Null spins the globe idly. */
   focus: GlobeFocus | null;
+  /** Allows dragging the globe around and picking out markers. */
+  interactive?: boolean;
+  /** Fires as the pointer moves on or off a marker. */
+  onHoverPoint?: (hit: GlobeHit | null) => void;
   className?: string;
 };
 
 const RADIUS = 1;
 const IDLE_SPIN = 0.055; // radians per second
+const DRAG_SPEED = 0.005; // radians per pixel dragged
+const PITCH_LIMIT = Math.PI / 3;
+/** How close the pointer has to get to a marker, in CSS pixels. */
+const HIT_RADIUS = 18;
 
 /** Lon/lat in degrees to a point on the sphere, with lon 0 / lat 0 facing the camera. */
 function toVector(lon: number, lat: number, radius = RADIUS): THREE.Vector3 {
@@ -147,13 +158,22 @@ const ARC_VERTEX = `
   }
 `;
 
-export default function Globe({ points, homeGeo, focus, className = '' }: Props) {
+export default function Globe({
+  points,
+  homeGeo,
+  focus,
+  interactive = false,
+  onHoverPoint,
+  className = '',
+}: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
   // The render loop reads these through refs so prop changes never rebuild the scene.
   const focusRef = useRef(focus);
   const pointsRef = useRef(points);
+  const hoverCallbackRef = useRef(onHoverPoint);
   focusRef.current = focus;
   pointsRef.current = points;
+  hoverCallbackRef.current = onHoverPoint;
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -248,6 +268,17 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
     });
     spin.add(new THREE.Points(markerGeometry, markerMaterial));
 
+    // Ring drawn around whichever marker the pointer is on.
+    const hoverMaterial = new THREE.MeshBasicMaterial({
+      color: theme().accent,
+      transparent: true,
+      opacity: 0.5,
+      side: THREE.DoubleSide,
+    });
+    const hoverRing = new THREE.Mesh(new THREE.RingGeometry(0.028, 0.038, 24), hoverMaterial);
+    hoverRing.visible = false;
+    spin.add(hoverRing);
+
     // --- atmosphere ----------------------------------------------------------
     const atmosphereMaterial = new THREE.ShaderMaterial({
       vertexShader: ATMOSPHERE_VERTEX,
@@ -316,8 +347,118 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
       // Unwrap toward the nearest equivalent angle.
       const twoPi = Math.PI * 2;
       target.y = wantY + Math.round((current.y - wantY) / twoPi) * twoPi;
-      target.x = THREE.MathUtils.clamp(wantX, -Math.PI / 3, Math.PI / 3);
+      target.x = THREE.MathUtils.clamp(wantX, -PITCH_LIMIT, PITCH_LIMIT);
     };
+
+    // --- pointer -------------------------------------------------------------
+    // Dragging takes the globe off its target until the next row is pointed at,
+    // and hovering a marker holds it still so the tooltip stays put.
+    let dragging = false;
+    let steered = false;
+    let hoveredId: string | null = null;
+    let lastHit: GlobeHit | null = null;
+    let lastPointer = { x: 0, y: 0 };
+    const velocity = { x: 0, y: 0 };
+
+    const viewCentre = new THREE.Vector3();
+    const scratch = new THREE.Vector3();
+
+    const pickAt = (clientX: number, clientY: number): GlobeHit | null => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      if (!rect.width || !rect.height) return null;
+      const px = clientX - rect.left;
+      const py = clientY - rect.top;
+
+      // The globe's centre in view space — anything behind it is on the far
+      // side and hidden by the body, so it must not be pickable.
+      viewCentre.set(0, 0, 0).applyMatrix4(camera.matrixWorldInverse);
+
+      let best: GlobeHit | null = null;
+      let bestDistance = HIT_RADIUS;
+      for (let i = 0; i < pointsRef.current.length; i += 1) {
+        scratch.fromArray(markerPositions, i * 3).applyMatrix4(spin.matrixWorld);
+        if (scratch.clone().applyMatrix4(camera.matrixWorldInverse).z < viewCentre.z) continue;
+        const ndc = scratch.clone().project(camera);
+        const x = (ndc.x * 0.5 + 0.5) * rect.width;
+        const y = (-ndc.y * 0.5 + 0.5) * rect.height;
+        const distance = Math.hypot(x - px, y - py);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = { id: pointsRef.current[i].id, x, y };
+        }
+      }
+      return best;
+    };
+
+    const setHover = (hit: GlobeHit | null) => {
+      const index = hit ? pointsRef.current.findIndex((p) => p.id === hit.id) : -1;
+      if (index >= 0) {
+        hoverRing.position.fromArray(markerPositions, index * 3).multiplyScalar(1.01);
+        // Lay the ring flat against the surface.
+        hoverRing.lookAt(0, 0, 0);
+        hoverRing.visible = true;
+      } else {
+        hoverRing.visible = false;
+      }
+      // Only tell React when something it would render actually changed.
+      const moved =
+        hit && lastHit && (Math.abs(hit.x - lastHit.x) > 0.5 || Math.abs(hit.y - lastHit.y) > 0.5);
+      if ((hit?.id ?? null) !== hoveredId || moved) {
+        hoveredId = hit?.id ?? null;
+        lastHit = hit;
+        hoverCallbackRef.current?.(hit);
+      }
+      renderer.domElement.style.cursor = dragging ? 'grabbing' : hit ? 'pointer' : 'grab';
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      dragging = true;
+      steered = true;
+      velocity.x = 0;
+      velocity.y = 0;
+      lastPointer = { x: event.clientX, y: event.clientY };
+      renderer.domElement.setPointerCapture(event.pointerId);
+      renderer.domElement.style.cursor = 'grabbing';
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (dragging) {
+        const dx = event.clientX - lastPointer.x;
+        const dy = event.clientY - lastPointer.y;
+        lastPointer = { x: event.clientX, y: event.clientY };
+        velocity.y = dx * DRAG_SPEED;
+        velocity.x = dy * DRAG_SPEED;
+        current.y += velocity.y;
+        current.x = THREE.MathUtils.clamp(current.x + velocity.x, -PITCH_LIMIT, PITCH_LIMIT);
+        return;
+      }
+      setHover(pickAt(event.clientX, event.clientY));
+    };
+
+    const endDrag = (event: PointerEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      if (renderer.domElement.hasPointerCapture(event.pointerId)) {
+        renderer.domElement.releasePointerCapture(event.pointerId);
+      }
+      setHover(pickAt(event.clientX, event.clientY));
+    };
+
+    const onPointerLeave = () => {
+      if (!dragging) setHover(null);
+    };
+
+    if (interactive) {
+      const canvas = renderer.domElement;
+      canvas.style.cursor = 'grab';
+      // Let the page keep scrolling vertically on touch; horizontal drags spin.
+      canvas.style.touchAction = 'pan-y';
+      canvas.addEventListener('pointerdown', onPointerDown);
+      canvas.addEventListener('pointermove', onPointerMove);
+      canvas.addEventListener('pointerup', endDrag);
+      canvas.addEventListener('pointercancel', endDrag);
+      canvas.addEventListener('pointerleave', onPointerLeave);
+    }
 
     const applyTheme = () => {
       const t = theme();
@@ -364,7 +505,10 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
 
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
-      const delta = Math.min((now - last) / 1000, 0.1);
+      // rAF hands back the timestamp of the frame's start, which can predate the
+      // performance.now() taken while this effect was setting up — so the first
+      // delta can be negative. Clamp both ends before anything integrates it.
+      const delta = THREE.MathUtils.clamp((now - last) / 1000, 0, 0.1);
       last = now;
       if (!onScreen || document.hidden) return;
 
@@ -372,6 +516,8 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
       const key = focus ? `${focus.geo[0]},${focus.geo[1]}` : '';
       if (key !== lastFocusKey) {
         lastFocusKey = key;
+        // A new destination takes the globe back from the pointer.
+        steered = false;
         if (focus) {
           setTarget(focus.geo);
           buildArc(focus);
@@ -381,19 +527,36 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
       }
 
       if (focus) {
-        // Ease toward the destination, then draw the flight along the arc.
-        const ease = motionQuery.matches ? 1 : 1 - Math.pow(0.0016, delta);
-        current.lerp(target, ease);
-        idleYaw = current.y;
+        // Draw the flight along the arc, however the globe is being aimed.
         const progress = arcMaterial.uniforms.uProgress.value as number;
         arcMaterial.uniforms.uProgress.value = motionQuery.matches
           ? 1
-          : Math.min(1, progress + delta * 0.9);
+          : THREE.MathUtils.clamp(progress + delta * 0.9, 0, 1);
         if (arcCurrent) {
           const at = arcMaterial.uniforms.uProgress.value as number;
           traveller.visible = at > 0.02 && at < 0.999;
-          arcCurrent.getPointAt(Math.min(at, 1), traveller.position);
+          arcCurrent.getPointAt(THREE.MathUtils.clamp(at, 0, 1), traveller.position);
         }
+      }
+
+      if (dragging) {
+        // The pointer is driving; nothing else gets a say.
+      } else if (steered) {
+        // Coast to a stop after a drag, then hold wherever it was left.
+        current.y += velocity.y;
+        current.x = THREE.MathUtils.clamp(current.x + velocity.x, -PITCH_LIMIT, PITCH_LIMIT);
+        velocity.x *= 0.92;
+        velocity.y *= 0.92;
+        if (Math.abs(velocity.x) < 1e-5) velocity.x = 0;
+        if (Math.abs(velocity.y) < 1e-5) velocity.y = 0;
+        idleYaw = current.y;
+      } else if (focus) {
+        const ease = motionQuery.matches ? 1 : 1 - Math.pow(0.0016, delta);
+        current.lerp(target, ease);
+        idleYaw = current.y;
+      } else if (hoveredId) {
+        // Hold still while a marker is being inspected, so the tooltip stays put.
+        target.set(current.x, current.y);
       } else {
         if (!motionQuery.matches) idleYaw += delta * IDLE_SPIN;
         current.y = idleYaw;
@@ -414,6 +577,14 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       darkQuery.removeEventListener('change', applyTheme);
+      if (interactive) {
+        const canvas = renderer.domElement;
+        canvas.removeEventListener('pointerdown', onPointerDown);
+        canvas.removeEventListener('pointermove', onPointerMove);
+        canvas.removeEventListener('pointerup', endDrag);
+        canvas.removeEventListener('pointercancel', endDrag);
+        canvas.removeEventListener('pointerleave', onPointerLeave);
+      }
       clearArc();
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh || object instanceof THREE.Points) {
@@ -426,6 +597,7 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
         gridMaterial,
         landMaterial,
         markerMaterial,
+        hoverMaterial,
         atmosphereMaterial,
         arcMaterial,
         travellerMaterial,
@@ -435,7 +607,7 @@ export default function Globe({ points, homeGeo, focus, className = '' }: Props)
     };
     // The scene is built once; live values are read through refs inside the loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [homeGeo]);
+  }, [homeGeo, interactive]);
 
   return <div ref={mountRef} aria-hidden="true" className={className} />;
 }

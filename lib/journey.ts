@@ -279,6 +279,45 @@ export const distanceKm = (from: [number, number], to: [number, number]): number
   return Math.round(2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(a)));
 };
 
+/** A city on the globe, with every trip that landed there. */
+export type Place = {
+  /** Stable key for the city. */
+  id: string;
+  city: string;
+  country: string;
+  iata: string;
+  geo: [number, number];
+  /** Trips to this city, most recent first. */
+  visits: DerivedTrip[];
+};
+
+/**
+ * One marker per city rather than per trip — going back to Seoul should light
+ * up the same point, not stack a second one on top of it.
+ */
+export const groupPlaces = (trips: DerivedTrip[]): Place[] => {
+  const places = new Map<string, Place>();
+  for (const trip of trips) {
+    const id = `${trip.city}·${trip.country}`;
+    const existing = places.get(id);
+    if (existing) existing.visits.push(trip);
+    else
+      places.set(id, {
+        id,
+        city: trip.city,
+        country: trip.country,
+        iata: trip.iata,
+        geo: trip.geo,
+        visits: [trip],
+      });
+  }
+  const grouped = Array.from(places.values());
+  grouped.forEach((place) => {
+    place.visits.sort((a, b) => b.startDate.localeCompare(a.startDate));
+  });
+  return grouped;
+};
+
 /**
  * Distance actually flown: the sum of the legs through any waypoints, so a
  * route bent around closed airspace reports the longer figure it really is.

@@ -146,6 +146,7 @@ export default function Journey({ todayISO }: Props) {
                 rows={departures.map(toDepartureRow)}
                 ariaLabel="Departures board"
                 emptyLabel="No departures scheduled"
+                activeKey={focusId}
                 onFocusRow={setFocusId}
               />
             </section>
@@ -165,6 +166,7 @@ export default function Journey({ todayISO }: Props) {
                 rows={arrivalRows}
                 ariaLabel="Arrivals board"
                 emptyLabel="No arrivals logged"
+                activeKey={focusId}
                 onFocusRow={setFocusId}
               />
             </section>

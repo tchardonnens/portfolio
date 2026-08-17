@@ -52,11 +52,13 @@ function Flap({
 function Row({
   row,
   index,
+  active,
   onFocusRow,
 }: {
   row: Extract<BoardRow, { cells: BoardCell[] }>;
   index: number;
-  onFocusRow?: (key: string | null) => void;
+  active?: boolean;
+  onFocusRow?: (key: string) => void;
 }) {
   const content = row.cells.map((cell, column) => {
     // Stagger down the rows and across the columns, so the board fills in the
@@ -86,18 +88,18 @@ function Row({
   const className = [
     GRID,
     'border-t border-neutral-200 px-4 py-3.5 transition-colors duration-200 dark:border-neutral-800',
-    row.live
+    active ? 'bg-orange-500/[0.06] shadow-[inset_2px_0_0_0_#f97316] dark:bg-orange-500/[0.08]' : '',
+    row.live && !active
       ? 'bg-orange-500/[0.06] dark:bg-orange-500/[0.08]'
       : 'hover:bg-neutral-100 dark:hover:bg-neutral-900',
   ].join(' ');
 
-  // Pointing at a row flies the globe to that destination; leaving lets it idle
-  // again. Focus mirrors hover so the globe follows keyboard navigation too.
+  // Pointing at a row flies the globe to that destination. The route then stays
+  // up until another row is pointed at, so there is no handler for leaving.
+  // Focus mirrors hover so the globe follows keyboard navigation too.
   const handlers = onFocusRow && {
     onMouseEnter: () => onFocusRow(row.key),
-    onMouseLeave: () => onFocusRow(null),
     onFocus: () => onFocusRow(row.key),
-    onBlur: () => onFocusRow(null),
   };
 
   if (row.href) {
@@ -127,6 +129,7 @@ export default function FlightBoard({
   rows,
   ariaLabel,
   emptyLabel = 'Nothing scheduled',
+  activeKey,
   onFocusRow,
 }: {
   title: string;
@@ -134,8 +137,10 @@ export default function FlightBoard({
   rows: BoardRow[];
   ariaLabel: string;
   emptyLabel?: string;
-  /** Fires with a row key on hover or focus, and null when it is released. */
-  onFocusRow?: (key: string | null) => void;
+  /** The row whose route is currently on the globe. */
+  activeKey?: string | null;
+  /** Fires with a row key on hover or focus. Selection is sticky. */
+  onFocusRow?: (key: string) => void;
 }) {
   const body: BoardRow[] = rows.length
     ? rows
@@ -188,7 +193,15 @@ export default function FlightBoard({
             );
           }
           dataRowIndex += 1;
-          return <Row key={row.key} row={row} index={dataRowIndex} onFocusRow={onFocusRow} />;
+          return (
+            <Row
+              key={row.key}
+              row={row}
+              index={dataRowIndex}
+              active={row.key === activeKey}
+              onFocusRow={onFocusRow}
+            />
+          );
         })}
       </div>
     </section>
