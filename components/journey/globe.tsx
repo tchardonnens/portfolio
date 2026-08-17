@@ -4,13 +4,16 @@ import { landDots } from '../../lib/land-dots';
 
 export type GlobePoint = { id: string; geo: [number, number] };
 
+/** The hovered destination, plus any waypoints its route is routed through. */
+export type GlobeFocus = { geo: [number, number]; via?: [number, number][] };
+
 type Props = {
   /** Every place on the board, drawn as a marker. */
   points: GlobePoint[];
   /** Where flights leave from — the origin of every arc. */
   homeGeo: [number, number];
   /** The hovered row's destination. Null spins the globe idly. */
-  focusGeo: [number, number] | null;
+  focus: GlobeFocus | null;
   className?: string;
 };
 
@@ -28,20 +31,41 @@ function toVector(lon: number, lat: number, radius = RADIUS): THREE.Vector3 {
   );
 }
 
+const ARC_SAMPLES = 96;
+
 /**
- * A great-circle path between two points, lifted off the surface. Longer
- * flights arch higher, the way route maps draw them.
+ * The flight path, lifted off the surface — longer flights arch higher, the way
+ * route maps draw them. With no waypoints this is the great circle, which is
+ * what aircraft actually fly on most routes. Waypoints bend it leg by leg, for
+ * the routes where airspace makes the real track deviate.
  */
-function arcCurve(from: THREE.Vector3, to: THREE.Vector3): THREE.CatmullRomCurve3 {
-  const angle = from.angleTo(to);
-  const lift = 0.12 + (angle / Math.PI) * 0.34;
+function arcCurve(anchors: THREE.Vector3[]): THREE.CatmullRomCurve3 {
+  const legs = anchors.slice(0, -1).map((point, i) => point.angleTo(anchors[i + 1]));
+  const total = legs.reduce((sum, angle) => sum + angle, 0);
+  if (total < 1e-6) return new THREE.CatmullRomCurve3([anchors[0], anchors[anchors.length - 1]]);
+
+  const lift = 0.12 + (total / Math.PI) * 0.34;
   const points: THREE.Vector3[] = [];
-  for (let i = 0; i <= 64; i += 1) {
-    const t = i / 64;
-    const point = from.clone().lerp(to, t).normalize();
-    point.multiplyScalar(RADIUS + Math.sin(Math.PI * t) * lift);
-    points.push(point);
-  }
+  let travelled = 0;
+
+  legs.forEach((angle, leg) => {
+    // Give each leg a share of the samples proportional to its length, so the
+    // curve stays evenly spaced however the waypoints are distributed.
+    const steps = Math.max(2, Math.round(ARC_SAMPLES * (angle / total)));
+    for (let step = leg === 0 ? 0 : 1; step <= steps; step += 1) {
+      const along = step / steps;
+      const point = anchors[leg]
+        .clone()
+        .lerp(anchors[leg + 1], along)
+        .normalize();
+      // Height follows progress along the whole path, not the current leg.
+      const t = (travelled + angle * along) / total;
+      point.multiplyScalar(RADIUS + Math.sin(Math.PI * t) * lift);
+      points.push(point);
+    }
+    travelled += angle;
+  });
+
   return new THREE.CatmullRomCurve3(points);
 }
 
@@ -123,12 +147,12 @@ const ARC_VERTEX = `
   }
 `;
 
-export default function Globe({ points, homeGeo, focusGeo, className = '' }: Props) {
+export default function Globe({ points, homeGeo, focus, className = '' }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
   // The render loop reads these through refs so prop changes never rebuild the scene.
-  const focusRef = useRef(focusGeo);
+  const focusRef = useRef(focus);
   const pointsRef = useRef(points);
-  focusRef.current = focusGeo;
+  focusRef.current = focus;
   pointsRef.current = points;
 
   useEffect(() => {
@@ -266,9 +290,10 @@ export default function Globe({ points, homeGeo, focusGeo, className = '' }: Pro
       traveller.visible = false;
     };
 
-    const buildArc = (geo: [number, number]) => {
+    const buildArc = (next: GlobeFocus) => {
       clearArc();
-      arcCurrent = arcCurve(home, toVector(geo[0], geo[1]));
+      const waypoints = (next.via ?? []).map(([lon, lat]) => toVector(lon, lat));
+      arcCurrent = arcCurve([home, ...waypoints, toVector(next.geo[0], next.geo[1])]);
       arcMesh = new THREE.Mesh(
         new THREE.TubeGeometry(arcCurrent, 120, 0.008, 8, false),
         arcMaterial
@@ -285,8 +310,7 @@ export default function Globe({ points, homeGeo, focusGeo, className = '' }: Pro
     let idleYaw = 0;
     let lastFocusKey = '';
 
-    const setTarget = (geo: [number, number] | null) => {
-      if (!geo) return;
+    const setTarget = (geo: [number, number]) => {
       const wantY = THREE.MathUtils.degToRad(-geo[0]);
       const wantX = THREE.MathUtils.degToRad(geo[1]);
       // Unwrap toward the nearest equivalent angle.
@@ -345,11 +369,11 @@ export default function Globe({ points, homeGeo, focusGeo, className = '' }: Pro
       if (!onScreen || document.hidden) return;
 
       const focus = focusRef.current;
-      const key = focus ? `${focus[0]},${focus[1]}` : '';
+      const key = focus ? `${focus.geo[0]},${focus.geo[1]}` : '';
       if (key !== lastFocusKey) {
         lastFocusKey = key;
         if (focus) {
-          setTarget(focus);
+          setTarget(focus.geo);
           buildArc(focus);
         } else {
           clearArc();

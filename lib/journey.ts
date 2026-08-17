@@ -24,6 +24,13 @@ export type Trip = {
   continent: Continent;
   /** [longitude, latitude] — where the globe puts the marker. */
   geo: [number, number];
+  /**
+   * Waypoints the route passes through, as [lon, lat]. Leave this off and the
+   * globe draws the great circle, which is what aircraft actually fly on most
+   * routes. Set it for the ones where airspace pushes the real track off the
+   * direct line — these are approximate published routings, not recorded tracks.
+   */
+  via?: [number, number][];
   /** YYYY-MM-DD. Drives sorting and which board the row lands on. */
   startDate: string;
   /** YYYY-MM-DD. Omit for a single day or an open-ended stay. */
@@ -89,6 +96,14 @@ export const TRIPS: Trip[] = [
     iata: 'ICN',
     continent: 'Asia',
     geo: [126.98, 37.57],
+    via: [
+      [19.0, 47.5], // Hungary
+      [33.0, 40.0], // central Türkiye
+      [52.0, 40.5], // Caspian / Turkmenistan
+      [67.0, 42.5], // Uzbekistan
+      [87.0, 44.0], // Ürümqi, Xinjiang
+      [110.0, 41.5], // Inner Mongolia
+    ],
     startDate: '2024-05-04', // check the real dates
     endDate: '2024-05-18',
     region: 'South Korea',
@@ -125,6 +140,14 @@ export const TRIPS: Trip[] = [
     iata: 'HND',
     continent: 'Asia',
     geo: [139.69, 35.69],
+    via: [
+      [19.0, 47.5], // Hungary
+      [33.0, 40.0], // central Türkiye
+      [52.0, 40.5], // Caspian / Turkmenistan
+      [67.0, 42.5], // Uzbekistan
+      [87.0, 44.0], // Ürümqi, Xinjiang
+      [110.0, 41.5], // Inner Mongolia
+    ],
     startDate: '2025-04-11',
     endDate: '2025-04-24',
     region: 'Japan',
@@ -159,6 +182,14 @@ export const TRIPS: Trip[] = [
     iata: 'ICN',
     continent: 'Asia',
     geo: [126.98, 37.57],
+    via: [
+      [19.0, 47.5], // Hungary
+      [33.0, 40.0], // central Türkiye
+      [52.0, 40.5], // Caspian / Turkmenistan
+      [67.0, 42.5], // Uzbekistan
+      [87.0, 44.0], // Ürümqi, Xinjiang
+      [110.0, 41.5], // Inner Mongolia
+    ],
     startDate: '2026-12-19',
     endDate: '2027-01-03',
     region: 'South Korea · Round two',
@@ -246,6 +277,15 @@ export const distanceKm = (from: [number, number], to: [number, number]): number
     Math.sin(dLat / 2) ** 2 +
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return Math.round(2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(a)));
+};
+
+/**
+ * Distance actually flown: the sum of the legs through any waypoints, so a
+ * route bent around closed airspace reports the longer figure it really is.
+ */
+export const routeKm = (from: [number, number], trip: Trip): number => {
+  const legs = [from, ...(trip.via ?? []), trip.geo];
+  return legs.slice(0, -1).reduce((total, point, i) => total + distanceKm(point, legs[i + 1]), 0);
 };
 
 const phaseOf = (trip: Trip, todayISO: string): Phase => {

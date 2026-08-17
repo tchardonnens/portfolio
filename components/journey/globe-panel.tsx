@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import type { GlobePoint } from './globe';
-import { DerivedTrip, HOME_CODE, distanceKm } from '../../lib/journey';
+import { DerivedTrip, HOME_CODE, routeKm } from '../../lib/journey';
 
 // three.js is heavy and touches the DOM, so it stays out of the static build
 // and only loads once the page is running in a browser.
@@ -34,7 +34,7 @@ export default function GlobePanel({
       <Globe
         points={points}
         homeGeo={home.geo}
-        focusGeo={focused && focused.id !== home.id ? focused.geo : null}
+        focus={focused && focused.id !== home.id ? { geo: focused.geo, via: focused.via } : null}
         className="aspect-square w-full"
       />
 
@@ -47,7 +47,7 @@ export default function GlobePanel({
               <span className="font-semibold">{focused.iata}</span>
             </span>
             <span className="text-[0.7rem] uppercase tracking-[0.15em] text-neutral-500 dark:text-neutral-500">
-              {focused.city} · {distanceKm(home.geo, focused.geo).toLocaleString('en-US')} km
+              {focused.city} · {routeKm(home.geo, focused).toLocaleString('en-US')} km
             </span>
           </div>
         ) : (
