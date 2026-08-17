@@ -10,8 +10,9 @@ import {
   HOME_CODE,
   HOME_NAME,
   buildBoards,
-  formatDay,
   formatRange,
+  formatStart,
+  precisionOf,
 } from '../../lib/journey';
 
 type Props = { todayISO: string };
@@ -56,7 +57,9 @@ const STATUS_STYLES: Record<string, string> = {
 const departureStatus = (trip: DerivedTrip): { text: string; kind: string; sub?: string } => {
   if (trip.phase === 'boarding') return { text: 'Boarding', kind: 'boarding' };
   if (trip.phase === 'enroute') return { text: 'En route', kind: 'enroute' };
-  return { text: 'On time', kind: 'ontime', sub: `in ${trip.daysAway}d` };
+  // A countdown off a date rounded to the month would be made up to the day.
+  const sub = precisionOf(trip) === 'day' ? `in ${trip.daysAway}d` : undefined;
+  return { text: 'On time', kind: 'ontime', sub };
 };
 
 const toDepartureRow = (trip: DerivedTrip): BoardRow => {
@@ -65,7 +68,7 @@ const toDepartureRow = (trip: DerivedTrip): BoardRow => {
     key: trip.id,
     href: trip.link,
     cells: [
-      { content: formatDay(trip.startDate), className: WHEN },
+      { content: formatStart(trip), className: WHEN },
       { content: trip.city, className: CITY, sub: trip.region ?? trip.country },
       { content: trip.flight, className: FLIGHT },
       {

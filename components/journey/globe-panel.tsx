@@ -7,6 +7,7 @@ import {
   Place,
   formatRange,
   groupPlaces,
+  precisionOf,
   routeKm,
 } from '../../lib/journey';
 
@@ -35,14 +36,24 @@ function PlaceTooltip({ place, hit }: { place: Place; hit: GlobeHit }) {
         {place.country} · {place.visits.length} {place.visits.length === 1 ? 'trip' : 'trips'}
       </p>
       <ul className="mt-2 flex flex-col gap-1 border-t border-neutral-200 pt-2 dark:border-neutral-800">
-        {place.visits.map((visit) => (
-          <li key={visit.id} className="flex items-baseline justify-between gap-2 text-[0.7rem]">
-            <span className="tabular-nums">{visit.year}</span>
-            <span className="text-neutral-500 dark:text-neutral-400">
-              {visit.phase === 'resident' ? 'Home' : formatRange(visit)}
-            </span>
-          </li>
-        ))}
+        {place.visits.map((visit) => {
+          // The year is already the left column, so a year-only trip has
+          // nothing left to say on the right.
+          const detail =
+            visit.phase === 'resident'
+              ? 'Home'
+              : precisionOf(visit) === 'year'
+                ? null
+                : formatRange(visit);
+          return (
+            <li key={visit.id} className="flex items-baseline justify-between gap-2 text-[0.7rem]">
+              <span className="tabular-nums">{visit.year}</span>
+              {detail && (
+                <span className="text-neutral-500 dark:text-neutral-400">{detail}</span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -56,15 +67,17 @@ function Caption({ home, focused }: { home: DerivedTrip; focused: DerivedTrip | 
       </span>
     );
   }
+  // Most legs leave from home; the handful that did not name their real origin.
+  const from = focused.origin ?? { code: HOME_CODE, geo: home.geo };
   return (
     <div className="flex flex-col gap-1">
       <span className="text-sm">
-        <span className="text-neutral-500 dark:text-neutral-500">{HOME_CODE}</span>
+        <span className="text-neutral-500 dark:text-neutral-500">{from.code}</span>
         <span className="px-2 text-orange-500">→</span>
         <span className="font-semibold">{focused.iata}</span>
       </span>
       <span className="text-[0.7rem] uppercase tracking-[0.15em] text-neutral-500 dark:text-neutral-500">
-        {focused.city} · {routeKm(home.geo, focused).toLocaleString('en-US')} km
+        {focused.city} · {routeKm(from.geo, focused).toLocaleString('en-US')} km
       </span>
     </div>
   );
@@ -90,7 +103,10 @@ export default function GlobePanel({
   const hovered = hit ? (places.find((place) => place.id === hit.id) ?? null) : null;
 
   const focus = useMemo(
-    () => (focused && focused.id !== home.id ? { geo: focused.geo, via: focused.via } : null),
+    () =>
+      focused && focused.id !== home.id
+        ? { geo: focused.geo, via: focused.via, from: focused.origin?.geo }
+        : null,
     [focused, home.id]
   );
 

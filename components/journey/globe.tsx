@@ -5,7 +5,12 @@ import { landDots } from '../../lib/land-dots';
 export type GlobePoint = { id: string; geo: [number, number] };
 
 /** The hovered destination, plus any waypoints its route is routed through. */
-export type GlobeFocus = { geo: [number, number]; via?: [number, number][] };
+export type GlobeFocus = {
+  geo: [number, number];
+  via?: [number, number][];
+  /** Where the leg took off from. Defaults to home. */
+  from?: [number, number];
+};
 
 /** A marker under the pointer, with where it sits on screen in CSS pixels. */
 export type GlobeHit = { id: string; x: number; y: number };
@@ -323,8 +328,9 @@ export default function Globe({
 
     const buildArc = (next: GlobeFocus) => {
       clearArc();
+      const start = next.from ? toVector(next.from[0], next.from[1]) : home;
       const waypoints = (next.via ?? []).map(([lon, lat]) => toVector(lon, lat));
-      arcCurrent = arcCurve([home, ...waypoints, toVector(next.geo[0], next.geo[1])]);
+      arcCurrent = arcCurve([start, ...waypoints, toVector(next.geo[0], next.geo[1])]);
       arcMesh = new THREE.Mesh(
         new THREE.TubeGeometry(arcCurrent, 120, 0.008, 8, false),
         arcMaterial
@@ -513,7 +519,9 @@ export default function Globe({
       if (!onScreen || document.hidden) return;
 
       const focus = focusRef.current;
-      const key = focus ? `${focus.geo[0]},${focus.geo[1]}` : '';
+      // The whole route identifies the arc, not just its endpoint — two trips
+      // can land in the same city from different places.
+      const key = focus ? `${focus.from ?? ''}>${focus.via ?? ''}>${focus.geo}` : '';
       if (key !== lastFocusKey) {
         lastFocusKey = key;
         // A new destination takes the globe back from the pointer.
