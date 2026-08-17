@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
 import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import AnimatedElement from '../components/animated-element';
 import Card from '../components/card';
@@ -283,33 +282,6 @@ export default function Home() {
                 backendStack="JavaScript, GPT3.5 API"
                 frontendStack="Discord hahaha"
               ></Card>
-            </AnimatedElement>
-          </section>
-
-          <section className="mb-12 space-y-6">
-            <AnimatedElement
-              as="h2"
-              delay={1.4}
-              className="mb-6 text-center font-['Schibsted_Grotesk'] text-2xl font-semibold"
-            >
-              And where I have been
-            </AnimatedElement>
-            <AnimatedElement as="div" delay={1.5} className="flex justify-center">
-              <Link href="/journey" className="w-full max-w-2xl">
-                <div className="flex flex-col gap-4 rounded-2xl border-2 border-neutral-200 p-8 transition-colors duration-200 hover:border-orange-500 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-orange-500">
-                  <div className="flex flex-row items-baseline justify-between gap-3">
-                    <p className="font-['Schibsted_Grotesk'] text-lg font-semibold">Journey</p>
-                    <span className="text-[0.7rem] uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
-                      Arrivals · Departures
-                    </span>
-                  </div>
-                  <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
-                    A departures and arrivals board of every place I have landed in, and the ones I
-                    have not flown to yet.
-                  </p>
-                  <p className="text-sm text-orange-500">View the board →</p>
-                </div>
-              </Link>
             </AnimatedElement>
           </section>
         </div>
