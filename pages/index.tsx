@@ -176,7 +176,7 @@ export default function Home() {
               delay={1.2}
               className="mb-6 text-center font-['Schibsted_Grotesk'] text-2xl font-semibold"
             >
-              Some of my silly projects
+              Selected work
             </AnimatedElement>
             <AnimatedElement
               as="div"
@@ -223,64 +223,6 @@ export default function Home() {
                 linkRepo="https://github.com/tchardonnens/planeBuddy"
                 backendStack="Node.js, Next.js, PostgreSQL"
                 frontendStack="Next.js, Vercel"
-              ></Card>
-
-              <Card
-                title="ScanURL"
-                description="Just a silly website to gather WHOIS, IP, reverse DNS and redirections analysis of a URL or first level domain"
-                linkProd="https://scanurl.thomascdnns.com/"
-                linkRepo="https://github.com/tchardonnens/scanurl/tree/2c8aa86b953dd2dbef8a7c999c762674873e576b"
-                backendStack="Python, Flask"
-                frontendStack="Jinja"
-              ></Card>
-
-              <Card
-                title="Portfolio"
-                description="My personal website. You are on it right now. Using Next because I want to develop something more complex than a static website in the next version..."
-                linkProd="https://thomascdnns.com"
-                linkRepo="https://github.com/tchardonnens/portfolio"
-                backendStack="???"
-                frontendStack="Next.js, Vercel"
-              ></Card>
-
-              <Card
-                title="Password Crusher"
-                description="Website interface to retrieve cached cracked unsalted MD5 passwords"
-                linkRepo="https://github.com/tchardonnens/pwd-crusher-back"
-                backendStack="Nest, Redis"
-                frontendStack="Angular"
-              ></Card>
-
-              <Card
-                title="Flat Fall Race"
-                description="A 2D multiplayer, server based, race game made with JavaFX (GUI) and Kryonet (Network) as ISEP Project"
-                linkRepo="https://github.com/tchardonnens/flat-fall-race"
-                backendStack="Java, Kryonet"
-                frontendStack="JavaFX"
-              ></Card>
-
-              <Card
-                title="Chess game"
-                description="Terminal UI chess game made in Java. Did not finish it though, but it was a good way to practice."
-                linkRepo="https://github.com/tchardonnens/cours-java/tree/main/TP3_G7_Chardonnens/"
-                backendStack="Java"
-                frontendStack="In the terminal, not very fancy"
-              ></Card>
-
-              <Card
-                title="Minecraft Server Dashboard"
-                description="Tiny vanilla website with a login system to start, stop and restart a Minecraft server with custom settings, choose map, mode (PVE or PVP), dark/light mode..."
-                linkRepo="https://github.com/tchardonnens/site-minecraft"
-                backendStack="PHP, JavaScript"
-                frontendStack="HTML, CSS"
-              ></Card>
-
-              <Card
-                title="Monkus"
-                description="A conversational sassy and roasting Discord bot using GPT3.5 API"
-                linkRepo="https://github.com/tchardonnens/monkus"
-                backendStack="JavaScript, GPT3.5 API"
-                frontendStack="Discord hahaha"
               ></Card>
             </AnimatedElement>
           </section>
