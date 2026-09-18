@@ -13,7 +13,7 @@ export default function Home() {
         <div className="w-full">
           <div className="mb-6 flex flex-row items-center justify-center">
             <Image
-              src="https://pbs.twimg.com/profile_images/1728638195871674368/X979dM1Q_400x400.jpg"
+              src="https://pbs.twimg.com/profile_images/2095519240912805888/cTiK7Vpx_400x400.jpg"
               alt="Profile Photo"
               width={150}
               height={150}
