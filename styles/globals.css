@@ -80,7 +80,7 @@ body {
   /* golden hour */
   --cb-sky: linear-gradient(180deg, #6c9bd1 0%, #a9bcdc 32%, #f1cbb0 62%, #ffe3bf 78%);
   --cb-sun: #fff7e2;
-  --cb-sun-glow: rgba(255, 216, 160, 0.75);
+  --cb-sun-glow: rgba(255, 216, 160, 0.6);
   --cb-stars: 0;
   --cb-cloud: rgba(255, 255, 255, 0.72);
   --cb-mtn: #c3bfe2;
@@ -88,6 +88,7 @@ body {
   --cb-far: #9189c2;
   --cb-hill: #7a70b0;
   --cb-mid: #594e93;
+  --cb-mid-2: #6c60a6;
   --cb-front: #2d2659;
   --cb-water: linear-gradient(180deg, #f6cdb0 0%, #cdbbd9 45%, #a9a8d6 100%);
   --cb-ripple: rgba(255, 255, 255, 0.5);
@@ -95,6 +96,16 @@ body {
   --cb-red: #d9412f;
   --cb-gold: #efae3c;
   --cb-stone: #f6ecdf;
+  --cb-wall: #ead8cb;
+  --cb-roof: #47427c;
+  --cb-wood: #a9523f;
+  --cb-jade: #2c6d78;
+  --cb-azure: #2f58ab;
+  --cb-grass: #6f9478;
+  --cb-blossom: #f0a3bb;
+  --cb-pane: rgba(45, 38, 89, 0.62);
+  --cb-pane-off: rgba(45, 38, 89, 0.62);
+  --cb-lattice: rgba(255, 255, 255, 0.2);
   --cb-bridge: #cf4428;
   --cb-pearl: #c8487c;
   --cb-ferry: #2e7358;
@@ -121,7 +132,7 @@ body {
     /* neon night */
     --cb-sky: linear-gradient(180deg, #050716 0%, #0c1233 34%, #231c52 62%, #47306b 78%);
     --cb-sun: #f3f0ff;
-    --cb-sun-glow: rgba(150, 160, 255, 0.4);
+    --cb-sun-glow: rgba(150, 160, 255, 0.3);
     --cb-stars: 1;
     --cb-cloud: rgba(150, 160, 225, 0.14);
     --cb-mtn: #2a2864;
@@ -129,6 +140,7 @@ body {
     --cb-far: #1b1a49;
     --cb-hill: #17163f;
     --cb-mid: #121133;
+    --cb-mid-2: #191844;
     --cb-front: #08081d;
     --cb-water: linear-gradient(180deg, #3a2a63 0%, #17163f 45%, #0b0c22 100%);
     --cb-ripple: rgba(170, 175, 255, 0.22);
@@ -136,6 +148,16 @@ body {
     --cb-red: #ff5a45;
     --cb-gold: #ffc65c;
     --cb-stone: #d5cdea;
+    --cb-wall: #2d2a5e;
+    --cb-roof: #0b0b24;
+    --cb-wood: #6a2f3a;
+    --cb-jade: #0e3a47;
+    --cb-azure: #3a63c8;
+    --cb-grass: #1d3a3c;
+    --cb-blossom: #a85f86;
+    --cb-pane: #ffd98a;
+    --cb-pane-off: rgba(4, 4, 20, 0.55);
+    --cb-lattice: rgba(255, 196, 104, 0.6);
     --cb-bridge: #e9593a;
     --cb-pearl: #ff5fa8;
     --cb-ferry: #3f9d7a;
@@ -195,15 +217,18 @@ body {
 
 .cb-sun {
   position: absolute;
-  top: 30%;
-  right: 20%;
-  height: 17%;
+  top: 38.5%;
+  right: 22%;
+  height: 110%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: var(--cb-sun);
-  box-shadow:
-    0 0 40px 12px var(--cb-sun-glow),
-    0 0 140px 60px var(--cb-sun-glow);
+  transform: translate(50%, -50%);
+  background: radial-gradient(
+    closest-side,
+    var(--cb-sun) 0 15.3%,
+    var(--cb-sun-glow) 16%,
+    transparent 100%
+  );
 }
 
 .cb-water {

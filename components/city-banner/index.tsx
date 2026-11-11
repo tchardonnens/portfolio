@@ -22,8 +22,8 @@ const farSkyline = skyline({
   minW: 16,
   maxW: 40,
   gap: 10,
-  detail: 0.35,
-});
+  detail: 0.5,
+}).join('');
 
 const CLOUDS_W = 2400;
 const clouds = (() => {
@@ -193,6 +193,29 @@ export default function CityBanner() {
               d="M2,3h2v3h-2ZM12,3h2v3h-2ZM7,9h2v3h-2ZM17,9h2v3h-2ZM2,15h2v3h-2ZM7,15h2v3h-2ZM12,21h2v2h-2ZM17,3h2v3h-2ZM12,15h2v3h-2Z"
               fill="var(--cb-win)"
             />
+          </pattern>
+          <pattern id="cb-win-grid" width="10" height="12" patternUnits="userSpaceOnUse">
+            <path
+              d="M1.2,1.500h2.400v3.200h-2.400ZM6.2,1.500h2.400v3.200h-2.400ZM6.2,7.500h2.400v3.200h-2.400Z"
+              fill="var(--cb-win)"
+            />
+            <path d="M1.2,7.500h2.400v3.200h-2.400Z" fill="var(--cb-win)" opacity="0.35" />
+          </pattern>
+          <pattern id="cb-win-band" width="38" height="7" patternUnits="userSpaceOnUse">
+            <path d="M1,2h13v2.200h-13ZM17,2h8v2.200h-8ZM29,2h8v2.200h-8Z" fill="var(--cb-win)" />
+          </pattern>
+          <pattern id="cb-win-fin" width="5" height="32" patternUnits="userSpaceOnUse">
+            <path d="M1.700,2h1.600v17h-1.600ZM1.700,22h1.600v8h-1.600Z" fill="var(--cb-win)" />
+          </pattern>
+          <pattern id="cb-win-round" width="6" height="6.400" patternUnits="userSpaceOnUse">
+            <circle cx="3" cy="3.200" r="1.700" fill="var(--cb-win)" />
+          </pattern>
+          <pattern id="cb-pane-band" width="40" height="5.500" patternUnits="userSpaceOnUse">
+            <path d="M0,2h40v1.500h-40Z" fill="var(--cb-pane-off)" opacity="0.5" />
+            <path d="M6,2h9v1.500h-9ZM24,2h5v1.500h-5Z" fill="var(--cb-pane)" />
+          </pattern>
+          <pattern id="cb-lattice" width="5" height="5" patternUnits="userSpaceOnUse">
+            <path d="M0,0L5,5M5,0L0,5" stroke="var(--cb-lattice)" strokeWidth="0.7" fill="none" />
           </pattern>
         </defs>
       </svg>

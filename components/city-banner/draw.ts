@@ -43,26 +43,8 @@ export function eave(cx: number, y: number, w: number, topW: number, h: number, 
   );
 }
 
-/** A tiered pagoda standing on `baseY`. Returns the path and the y of its tip. */
-export function pagoda(
-  cx: number,
-  baseY: number,
-  tiers: number,
-  baseW: number,
-  tierH: number,
-  shrink: number
-) {
-  let d = '';
-  const roofH = tierH * 0.42;
-  for (let i = 0; i < tiers; i++) {
-    const w = baseW - i * shrink;
-    const top = baseY - (i + 1) * tierH;
-    d += rect(cx - w / 2, top + roofH, w, tierH - roofH + 0.5);
-    d += eave(cx, top + roofH, w, Math.max(w - shrink, 4), roofH, 5);
-  }
-  const tip = baseY - tiers * tierH;
-  d += `M${r1(cx - 1.6)},${r1(tip)}L${r1(cx)},${r1(tip - tierH * 1.3)}L${r1(cx + 1.6)},${r1(tip)}Z`;
-  return d;
+export function circ(cx: number, cy: number, r: number) {
+  return `M${r1(cx - r)},${r1(cy)}a${r},${r} 0 1 0 ${r1(2 * r)},0a${r},${r} 0 1 0 ${r1(-2 * r)},0Z`;
 }
 
 interface SkylineOptions {
@@ -74,14 +56,14 @@ interface SkylineOptions {
   minW: number;
   maxW: number;
   gap?: number;
-  /** 0..1 — how often a building gets a rooftop detail. */
+  /** 0..1 — how often a building gets a distinctive top. */
   detail?: number;
   base?: number;
   /** Optional envelope: scales building height along x (0..1 → factor). */
   envelope?: (t: number) => number;
 }
 
-/** A run of generic buildings between `from` and `to`. */
+/** A run of generic buildings between `from` and `to`, one path per building. */
 export function skyline({
   seed,
   from,
@@ -91,12 +73,12 @@ export function skyline({
   minW,
   maxW,
   gap = 0,
-  detail = 0.45,
+  detail = 0.6,
   base = GROUND,
   envelope,
 }: SkylineOptions) {
   const rand = rng(seed);
-  let d = '';
+  const out: string[] = [];
   let x = from;
   while (x < to - minW) {
     const w = Math.min(minW + rand() * (maxW - minW), to - x);
@@ -104,22 +86,43 @@ export function skyline({
     const scale = envelope ? envelope(t) : 1;
     const h = (minH + rand() * rand() * (maxH - minH)) * scale + minH * (1 - scale) * 0.5;
     const top = base - h;
-    d += rect(x, top, w, h + 1);
-    const roll = rand();
-    if (roll < detail * 0.4) {
+    let d = rect(x, top, w, h + 1);
+    const roll = rand() / Math.max(detail, 0.01);
+    const tall = h > (minH + maxH) / 2;
+    if (roll < 0.16) {
       // stepped crown
-      d += rect(x + w * 0.2, top - 5, w * 0.6, 6);
-      if (w > 12) d += rect(x + w * 0.38, top - 9, w * 0.24, 5);
-    } else if (roll < detail * 0.75) {
-      // antenna
+      d += rect(x + w * 0.18, top - 5, w * 0.64, 6);
+      if (w > 11) d += rect(x + w * 0.36, top - 9.5, w * 0.28, 5.5);
+    } else if (roll < 0.3) {
+      // mast
       d += rect(x + w * 0.5 - 0.6, top - 12 - rand() * 10, 1.2, 24);
-    } else if (roll < detail) {
+      d += rect(x + w * 0.3, top - 3, w * 0.4, 4);
+    } else if (roll < 0.42) {
+      // slanted roof
+      const up = 5 + rand() * 6;
+      d +=
+        rand() < 0.5
+          ? `M${r1(x)},${r1(top + 0.5)}L${r1(x + w)},${r1(top - up)}V${r1(top + 0.5)}Z`
+          : `M${r1(x)},${r1(top + 0.5)}V${r1(top - up)}L${r1(x + w)},${r1(top + 0.5)}Z`;
+    } else if (roll < 0.54 && tall) {
+      // setback tower
+      const sh = 10 + rand() * 14;
+      d += rect(x + w * 0.16, top - sh, w * 0.68, sh + 1);
+      d += rect(x + w * 0.5 - 0.5, top - sh - 9, 1, 10);
+    } else if (roll < 0.64) {
+      // rounded top
+      d += `M${r1(x)},${r1(top + 0.5)}A${r1(w / 2)},${r1(w * 0.36)} 0 0 1 ${r1(x + w)},${r1(top + 0.5)}Z`;
+    } else if (roll < 0.74) {
+      // pyramid cap
+      d += `M${r1(x + 1)},${r1(top + 0.5)}L${r1(x + w / 2)},${r1(top - w * 0.55)}L${r1(x + w - 1)},${r1(top + 0.5)}Z`;
+    } else if (roll < 0.9) {
       // plant room
       d += rect(x + 2, top - 3.5, w * 0.4, 4);
     }
+    out.push(d);
     x += w + gap * rand();
   }
-  return d;
+  return out;
 }
 
 /** A rolling ridge that tiles horizontally (starts and ends at the same height). */
