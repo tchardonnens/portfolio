@@ -3,21 +3,23 @@ import Image from 'next/image';
 import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import AnimatedElement from '../components/animated-element';
 import Card from '../components/card';
+import CityBanner from '../components/city-banner';
 import CustomHead from '../components/head';
 
 export default function Home() {
   return (
     <>
       <CustomHead />
-      <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center bg-neutral-50 px-4 pb-8 pt-8 font-['JetBrains_Mono'] text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
+      <CityBanner />
+      <main className="mx-auto flex max-w-7xl flex-col items-center px-4 pb-8 font-['JetBrains_Mono'] text-neutral-800 dark:text-neutral-200">
         <div className="w-full">
-          <div className="mb-6 flex flex-row items-center justify-center">
+          <div className="relative z-10 -mt-[52px] mb-6 flex flex-row items-center justify-center">
             <Image
               src="https://pbs.twimg.com/profile_images/2095519240912805888/cTiK7Vpx_400x400.jpg"
               alt="Profile Photo"
               width={150}
               height={150}
-              className="rounded-full shadow-lg"
+              className="rounded-full shadow-lg ring-4 ring-neutral-50 dark:ring-neutral-950"
             />
           </div>
           <AnimatedElement
