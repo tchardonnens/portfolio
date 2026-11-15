@@ -3,6 +3,7 @@ import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import AnimatedElement from '../components/animated-element';
 import Card, { ProjectLinks } from '../components/card';
 import CityBanner from '../components/city-banner';
+import Experience from '../components/experience';
 import CustomHead from '../components/head';
 
 const SOCIALS = [
@@ -60,46 +61,9 @@ export default function Home() {
         <section className="tb-section tb-section--tinted">
           <div className="tb-section-header">
             <span className="tb-subtitle">Path</span>
-            <h2 className="tb-title">Education &amp; work</h2>
+            <h2 className="tb-title">Experience &amp; education</h2>
           </div>
-          <div className="tb-steps">
-            <AnimatedElement as="div" delay={0.1} className="tb-step">
-              <span className="tb-step-num" aria-hidden="true">
-                一
-              </span>
-              <h3>Education</h3>
-              <p>
-                M.S. in Electronic Engineering and Computer Science
-                <br />
-                <a href="https://www.isep.fr/">ISEP Paris</a> and{' '}
-                <a href="https://www.berkeley.edu/">University of California, Berkeley</a>
-              </p>
-            </AnimatedElement>
-            <AnimatedElement as="div" delay={0.2} className="tb-step">
-              <span className="tb-step-num" aria-hidden="true">
-                二
-              </span>
-              <h3>Software Engineer</h3>
-              <p>
-                <a href="https://mistral.ai/">Mistral AI</a> – French AI lab
-                <br />
-                <a href="https://rockfi.fr/">RockFi</a> – Private wealth management startup
-              </p>
-            </AnimatedElement>
-            <AnimatedElement as="div" delay={0.3} className="tb-step">
-              <span className="tb-step-num" aria-hidden="true">
-                三
-              </span>
-              <h3>Software Engineer Internships</h3>
-              <p>
-                <a href="https://qonto.com/en">Qonto</a> – European leader in neobanking for SMEs
-                <br />
-                <a href="https://www.ledger.com/">Ledger</a> – Leader in security for crypto-assets
-                <br />
-                <a href="https://www.idemia.com/">Idemia</a> – Leader in identity technologies
-              </p>
-            </AnimatedElement>
-          </div>
+          <Experience />
         </section>
 
         <section className="tb-section">
