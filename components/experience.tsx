@@ -53,6 +53,8 @@ const WORK: Entry[] = [
   },
   {
     name: 'Idemia',
+    logo: '/logos/idemia.svg',
+    logoHeight: 26,
     href: 'https://www.idemia.com/',
     role: 'Software Engineer Intern',
     about: 'Leader in identity technologies',
@@ -62,6 +64,8 @@ const WORK: Entry[] = [
 const SCHOOLS: Entry[] = [
   {
     name: 'ISEP',
+    logo: '/logos/isep.svg',
+    logoHeight: 48,
     href: 'https://www.isep.fr/',
     role: 'M.S. in Electronic Engineering and Computer Science',
     about: 'Engineering school, Paris',
