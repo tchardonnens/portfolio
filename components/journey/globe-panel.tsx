@@ -48,7 +48,9 @@ function PlaceTooltip({ place, hit }: { place: Place; hit: GlobeHit }) {
           return (
             <li key={visit.id} className="flex items-baseline justify-between gap-2 text-[0.7rem]">
               <span className="tabular-nums">{visit.year}</span>
-              {detail && <span className="text-neutral-500 dark:text-neutral-400">{detail}</span>}
+              {detail && (
+                <span className="text-neutral-500 dark:text-neutral-400">{detail}</span>
+              )}
             </li>
           );
         })}
